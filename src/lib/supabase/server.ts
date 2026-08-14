@@ -16,14 +16,14 @@ export async function createClient() {
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
+              cookieStore.set(name, value, options)
             );
-          } catch {
-            // Called from a Server Component with no request context — the
-            // middleware-based session refresh already covers this case.
+          } catch (error) {
+            // الـ catch كانت بتكتف الكوكيز في الـ Server Actions
+            // هنسيب الـ Server Action يرمي الكوكيز في الـ Response
           }
         },
       },
-    },
+    }
   );
 }
