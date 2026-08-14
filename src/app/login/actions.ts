@@ -23,7 +23,22 @@ export async function signIn(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return { error: "بيانات الدخول غير صحيحة" };
+    console.error("[auth] signInWithPassword failed:", error.status, error.code, error.message);
+
+    const message = error.message?.toLowerCase() ?? "";
+    if (error.code === "email_not_confirmed" || message.includes("email not confirmed")) {
+      return {
+        error:
+          "لم يتم تأكيد البريد الإلكتروني بعد. فعّل \"Auto Confirm\" عند إنشاء المستخدم من لوحة Supabase، أو أكّد البريد يدوياً.",
+      };
+    }
+    if (error.code === "invalid_credentials" || message.includes("invalid login credentials")) {
+      return {
+        error:
+          "بيانات الدخول غير صحيحة، أو أن هذا المستخدم غير موجود في Supabase Auth. تحقق من Authentication → Users في لوحة Supabase.",
+      };
+    }
+    return { error: `فشل تسجيل الدخول: ${error.message}` };
   }
 
   redirect(next || "/");
