@@ -10,14 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { updateBookingStatus } from "@/app/(dashboard)/bookings/actions";
+import { BOOKING_STATUS_LABELS } from "@/lib/booking-status-labels";
 import type { BookingStatus } from "@/types/database.types";
 
-const OPTIONS: { value: BookingStatus; label: string }[] = [
-  { value: "pending", label: "قيد المراجعة" },
-  { value: "confirmed", label: "مؤكد" },
-  { value: "sent", label: "تم الإرسال" },
-  { value: "cancelled", label: "ملغى" },
-];
+const OPTIONS = (Object.entries(BOOKING_STATUS_LABELS) as [BookingStatus, string][]).map(
+  ([value, label]) => ({ value, label }),
+);
 
 export function BookingStatusSelect({
   bookingId,

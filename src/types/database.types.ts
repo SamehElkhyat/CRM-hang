@@ -156,6 +156,79 @@ export interface Database {
           },
         ];
       };
+      booking_comments: {
+        Row: {
+          id: string;
+          booking_id: string;
+          author_id: string | null;
+          message: string;
+          is_system: boolean;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["booking_comments"]["Row"]> & {
+          booking_id: string;
+          message: string;
+        };
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "booking_comments_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "booking_comments_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      booking_followers: {
+        Row: {
+          booking_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["booking_followers"]["Row"]> & {
+          booking_id: string;
+          user_id: string;
+        };
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "booking_followers_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      booking_reads: {
+        Row: {
+          booking_id: string;
+          user_id: string;
+          last_read_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["booking_reads"]["Row"]> & {
+          booking_id: string;
+          user_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["booking_reads"]["Row"]>;
+        Relationships: [
+          {
+            foreignKeyName: "booking_reads_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -172,6 +245,10 @@ export interface Database {
       is_admin: {
         Args: Record<string, never>;
         Returns: boolean;
+      };
+      get_unread_booking_comments: {
+        Args: Record<string, never>;
+        Returns: UnreadThread[];
       };
     };
   };
@@ -204,4 +281,13 @@ export interface ProofreadIssue {
   original: string;
   suggestion: string;
   reason: string;
+}
+
+export interface UnreadThread {
+  booking_id: string;
+  guest_name: string;
+  hotel_name: string;
+  unread_count: number;
+  last_message: string;
+  last_message_at: string;
 }

@@ -3,7 +3,9 @@
 Enterprise internal tool for a hotel reservations & operations team: paste raw Arabic
 booking text, get structured extraction via Claude, automatic duplicate-booking
 detection, deterministic cost calculation from stored hotel policies, and an AI-assisted
-email drafting/proofreading/audit workflow before sending.
+email drafting/proofreading/audit workflow before sending — plus a real-time per-booking
+chat between agents and admins, with a follow list and live notifications so an agent can
+track a deal even after an admin takes over the hotel-side negotiation.
 
 ## Stack
 
@@ -18,6 +20,7 @@ email drafting/proofreading/audit workflow before sending.
 2. In the SQL Editor, run the migration files in order:
    - `supabase/migrations/0001_init_schema.sql`
    - `supabase/migrations/0002_indexes.sql`
+   - `supabase/migrations/0003_deal_communication.sql` (real-time per-booking chat, follow list, notifications)
    - (optional, for sample data) `supabase/seed.sql`
 
    Or, if you have the Supabase CLI linked to the project: `supabase db push`.

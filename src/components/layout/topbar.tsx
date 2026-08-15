@@ -14,6 +14,7 @@ import { SidebarNav } from "./sidebar-nav";
 import { ThemeToggle } from "./theme-toggle";
 import type { CurrentUser } from "@/lib/auth/get-current-profile";
 import { UserMenu } from "./user-menu";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 export function Topbar({ user }: { user: CurrentUser }) {
   const [open, setOpen] = React.useState(false);
@@ -40,6 +41,7 @@ export function Topbar({ user }: { user: CurrentUser }) {
       </div>
       <div className="flex-1" />
       <div className="flex items-center gap-1">
+        <NotificationBell currentUserId={user.id} />
         <ThemeToggle />
         <UserMenu user={user} />
       </div>
