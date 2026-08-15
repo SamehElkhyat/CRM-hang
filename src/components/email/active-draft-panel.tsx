@@ -52,6 +52,10 @@ export function ActiveDraftPanel({
   const isReadOnly = draft.status === "sent";
 
   async function handleSave() {
+    if (!subject.trim() || !body.trim()) {
+      toast.error("الرجاء إدخال عنوان ونص الرسالة قبل الحفظ");
+      return;
+    }
     setIsSaving(true);
     try {
       const result = await updateDraftContent(draft.id, bookingId, { subject, body });
@@ -113,6 +117,10 @@ export function ActiveDraftPanel({
   }
 
   async function handleSend() {
+    if (!subject.trim() || !body.trim()) {
+      toast.error("الرسالة فارغة — أضف عنواناً ونصاً قبل الإرسال");
+      return;
+    }
     if (dirty) {
       toast.error("احفظ التعديلات أولاً قبل الإرسال");
       return;

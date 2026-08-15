@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAuthedSupabase } from "@/lib/auth/require-auth";
+import type { Database } from "@/types/database.types";
+
+type EmailDraft = Database["public"]["Tables"]["email_drafts"]["Row"];
 
 export async function updateDraftContent(
   draftId: string,
@@ -20,4 +23,25 @@ export async function updateDraftContent(
 
   revalidatePath(`/bookings/${bookingId}/email`);
   return {};
+}
+
+// Starts a blank draft with no AI call at all — the agent types the subject
+// and body directly in the same editor (save / proofread / audit-compare /
+// send all stay available and fully optional either way).
+export async function createManualDraft(
+  bookingId: string,
+): Promise<{ data?: EmailDraft; error?: string }> {
+  const auth = await requireAuthedSupabase();
+  if (!auth.ok) return { error: "غير مصرح" };
+
+  const { data, error } = await auth.supabase
+    .from("email_drafts")
+    .insert({ booking_id: bookingId, subject: "", body: "", status: "draft", created_by: auth.userId })
+    .select("*")
+    .single();
+
+  if (error) return { error: error.message };
+
+  revalidatePath(`/bookings/${bookingId}/email`);
+  return { data };
 }
