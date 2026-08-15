@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ParseWorkspace } from "@/components/parse/parse-workspace";
@@ -13,12 +14,17 @@ export default async function ParsePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">تحليل الحجز</h1>
-        <p className="text-sm text-muted-foreground">
-          الصق نص الحجز العربي ليقوم النظام باستخراج البيانات، التحقق من التكرار،
-          وحساب التكلفة تلقائياً
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">تحليل الحجز</h1>
+          <p className="text-sm text-muted-foreground">
+            الصق نص الحجز العربي ليقوم النظام باستخراج البيانات، التحقق من التكرار،
+            وحساب التكلفة تلقائياً
+          </p>
+        </div>
+        <Link href="/bookings/new" className="text-sm text-primary underline underline-offset-2">
+          تفضل الإدخال اليدوي؟ أضف حجزاً بدون ذكاء اصطناعي
+        </Link>
       </div>
 
       {error && (

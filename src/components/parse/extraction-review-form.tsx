@@ -34,17 +34,19 @@ export function ExtractionReviewForm({
   hotels,
   draft,
   onChange,
+  title = "مراجعة البيانات المستخرجة",
 }: {
   hotels: Hotel[];
   draft: BookingDraft;
   onChange: (patch: Partial<BookingDraft>) => void;
+  title?: string;
 }) {
   const selectedHotel = hotels.find((h) => h.id === draft.hotelId);
 
   return (
     <Card className="glass-panel">
       <CardHeader>
-        <CardTitle>مراجعة البيانات المستخرجة</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -173,7 +175,7 @@ export function ExtractionReviewForm({
             />
           </div>
           <div className="flex flex-col gap-1.5 sm:col-span-2">
-            <Label htmlFor="notes">ملاحظات</Label>
+            <Label htmlFor="notes">الوصف / ملاحظات</Label>
             <Textarea
               id="notes"
               value={draft.notes}

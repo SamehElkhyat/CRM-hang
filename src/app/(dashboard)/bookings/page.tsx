@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarCheck } from "lucide-react";
+import { CalendarCheck, Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -63,6 +63,10 @@ export default async function BookingsPage({
             render={<Link href="/bookings?filter=following" />}
           >
             متابعاتي
+          </Button>
+          <Button size="sm" render={<Link href="/bookings/new" />}>
+            <Plus />
+            إضافة حجز
           </Button>
         </div>
       </div>
