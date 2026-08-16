@@ -25,7 +25,7 @@ export default async function HotelsPage() {
           </p>
         </div>
         {isAdmin && (
-          <Button render={<Link href="/hotels/new" />}>
+          <Button className="glow-primary-hover" render={<Link href="/hotels/new" />}>
             <Plus />
             إضافة فندق
           </Button>

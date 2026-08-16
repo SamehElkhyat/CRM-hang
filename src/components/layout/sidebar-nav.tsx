@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "./nav-items";
 
@@ -20,14 +21,21 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
             href={item.href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200",
               isActive
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                ? "text-primary"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-foreground",
             )}
           >
-            <Icon className="size-4 shrink-0" />
-            <span>{item.label}</span>
+            {isActive && (
+              <motion.span
+                layoutId="active-nav-pill"
+                className="absolute inset-0 rounded-lg bg-primary/10"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+            <Icon className="relative z-10 size-4 shrink-0" />
+            <span className="relative z-10">{item.label}</span>
           </Link>
         );
       })}

@@ -185,7 +185,7 @@ export function ActiveDraftPanel({
                 onClick={handleSend}
                 disabled={isSending || !reservationEmailConfigured}
                 size="sm"
-                className="ms-auto"
+                className="glow-primary-hover ms-auto"
               >
                 {isSending ? <Loader2 className="animate-spin" /> : <Send />}
                 إرسال البريد

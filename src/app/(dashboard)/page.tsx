@@ -63,7 +63,7 @@ export default async function DashboardHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      <div className="animate-fade-in">
         <h1 className="text-2xl font-bold">لوحة التحكم</h1>
         <p className="text-sm text-muted-foreground">
           نظرة عامة على حالة الحجوزات والعمليات
@@ -76,24 +76,28 @@ export default async function DashboardHomePage() {
           value={totalBookings ?? 0}
           icon={ListChecks}
           accent="primary"
+          index={0}
         />
         <StatCard
           label="قيد المراجعة"
           value={pendingCount ?? 0}
           icon={CalendarClock}
           accent="amber"
+          index={1}
         />
         <StatCard
           label="تم إرسال البريد"
           value={sentCount ?? 0}
           icon={CheckCircle2}
           accent="green"
+          index={2}
         />
         <StatCard
           label="الفنادق النشطة"
           value={hotelsCount ?? 0}
           icon={Hotel}
           accent="primary"
+          index={3}
         />
       </div>
 
@@ -110,11 +114,12 @@ export default async function DashboardHomePage() {
               </Link>
             </p>
           ) : (
-            recentBookings.map((booking) => (
+            recentBookings.map((booking, i) => (
               <Link
                 key={booking.id}
                 href={`/bookings/${booking.id}`}
-                className="flex items-center justify-between rounded-lg border border-border/60 px-4 py-3 text-sm transition-colors hover:bg-accent/50"
+                className="flex animate-slide-in-up items-center justify-between rounded-lg border border-border/60 px-4 py-3 text-sm transition-colors hover:bg-accent/50"
+                style={{ animationDelay: `${i * 40}ms`, animationFillMode: "backwards" }}
               >
                 <div>
                   <p className="font-medium">{booking.guest_name}</p>

@@ -76,7 +76,12 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
         </Card>
       )}
 
-      <Button onClick={handleSave} disabled={isSaving} className="self-start" size="lg">
+      <Button
+        onClick={handleSave}
+        disabled={isSaving}
+        className="glow-primary-hover self-start"
+        size="lg"
+      >
         {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
         {isSaving ? "جاري الحفظ..." : "حفظ الحجز"}
       </Button>

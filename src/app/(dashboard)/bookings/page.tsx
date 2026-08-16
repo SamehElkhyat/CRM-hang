@@ -64,7 +64,7 @@ export default async function BookingsPage({
           >
             متابعاتي
           </Button>
-          <Button size="sm" render={<Link href="/bookings/new" />}>
+          <Button size="sm" className="glow-primary-hover" render={<Link href="/bookings/new" />}>
             <Plus />
             إضافة حجز
           </Button>

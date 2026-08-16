@@ -122,7 +122,7 @@ export function ParseWorkspace({ hotels }: { hotels: Hotel[] }) {
           <Button
             onClick={() => save(rawText)}
             disabled={isSaving}
-            className="self-start"
+            className="glow-primary-hover self-start"
             size="lg"
           >
             {isSaving ? <Loader2 className="animate-spin" /> : <Save />}

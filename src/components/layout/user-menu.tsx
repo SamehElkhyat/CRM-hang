@@ -32,7 +32,7 @@ export function UserMenu({ user }: { user: CurrentUser }) {
           />
         }
       >
-        <Avatar className="size-8">
+        <Avatar className="avatar-ring size-8">
           <AvatarFallback>
             {initials(user.profile?.full_name ?? null, user.email)}
           </AvatarFallback>
