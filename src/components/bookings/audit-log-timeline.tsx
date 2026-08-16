@@ -1,5 +1,4 @@
 import { History, PlusCircle, Pencil } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 
 const FIELD_LABELS: Record<string, string> = {
@@ -56,19 +55,30 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
     .order("timestamp", { ascending: false });
 
   return (
-    <Card className="glass-panel">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <History className="size-4" />
-          سجل التعديلات
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {error && <p className="text-sm text-destructive">تعذر تحميل السجل: {error.message}</p>}
-        {!error && (!logs || logs.length === 0) && (
-          <p className="text-sm text-muted-foreground">لا توجد تعديلات مسجلة بعد.</p>
+    <div className="glass-panel animate-fade-in-up overflow-hidden" style={{ animationDelay: "300ms" }}>
+      <p className="eyebrow flex items-center gap-2 border-b border-[var(--hairline)] px-5 py-3.5">
+        <History className="size-3.5" />
+        سجل التعديلات
+      </p>
+      <div className="p-5">
+        {error && (
+          <p className="text-[13px] text-destructive">تعذر تحميل السجل: {error.message}</p>
         )}
-        <div className="flex flex-col gap-4">
+        {!error && (!logs || logs.length === 0) && (
+          <p className="py-4 text-[13px] text-muted-foreground">
+            لا توجد تعديلات مسجلة بعد.
+          </p>
+        )}
+
+        <div className="relative flex flex-col">
+          {/* continuous spine behind the nodes */}
+          {logs && logs.length > 0 && (
+            <span
+              aria-hidden
+              className="absolute inset-y-2 start-[7px] w-px bg-[var(--hairline)]"
+            />
+          )}
+
           {logs?.map((log) => {
             const changes =
               log.change_type === "update"
@@ -78,36 +88,47 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
                   )
                 : [];
             const actor =
-              (log.profiles as unknown as { full_name: string | null } | null)?.full_name ||
-              "عضو الفريق";
+              (log.profiles as unknown as { full_name: string | null } | null)
+                ?.full_name || "عضو الفريق";
+            const isInsert = log.change_type === "insert";
 
             return (
-              <div key={log.id} className="flex gap-3 border-s-2 border-border ps-4">
-                <div className="mt-0.5">
-                  {log.change_type === "insert" ? (
-                    <PlusCircle className="size-4 text-chart-3" />
+              <div key={log.id} className="relative flex gap-4 pb-5 last:pb-0">
+                <div
+                  className={`relative z-10 mt-0.5 flex size-[15px] shrink-0 items-center justify-center rounded-full ring-4 ring-[var(--card)] ${
+                    isInsert ? "bg-chart-3/15" : "bg-chart-4/15"
+                  }`}
+                >
+                  {isInsert ? (
+                    <PlusCircle className="size-3 text-chart-3" />
                   ) : (
-                    <Pencil className="size-4 text-chart-4" />
+                    <Pencil className="size-[10px] text-chart-4" />
                   )}
                 </div>
-                <div className="flex-1 text-sm">
-                  <p className="font-medium">
-                    {log.change_type === "insert" ? "تم إنشاء الحجز" : "تم تعديل الحجز"}
-                    <span className="ms-1 font-normal text-muted-foreground">
+
+                <div className="min-w-0 flex-1">
+                  <p className="text-[13.5px] font-medium tracking-[-0.005em]">
+                    {isInsert ? "تم إنشاء الحجز" : "تم تعديل الحجز"}
+                    <span className="ms-1.5 font-normal text-muted-foreground">
                       بواسطة {actor}
                     </span>
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="mt-0.5 text-[11.5px] tabular-nums text-muted-foreground/80">
                     {new Date(log.timestamp).toLocaleString("ar-EG")}
                   </p>
+
                   {changes.length > 0 && (
-                    <ul className="mt-1.5 flex flex-col gap-0.5 text-xs">
+                    <ul className="mt-2 flex flex-col gap-1 rounded-lg border border-[var(--hairline)] bg-muted/40 px-3 py-2">
                       {changes.map((c) => (
-                        <li key={c.field}>
+                        <li key={c.field} className="text-[12px]">
                           <span className="text-muted-foreground">
                             {FIELD_LABELS[c.field] ?? c.field}:{" "}
                           </span>
-                          {formatValue(c.from)} ← {formatValue(c.to)}
+                          <span className="text-muted-foreground/70 line-through">
+                            {formatValue(c.from)}
+                          </span>
+                          <span className="mx-1.5 text-muted-foreground/50">←</span>
+                          <span className="font-medium">{formatValue(c.to)}</span>
                         </li>
                       ))}
                     </ul>
@@ -117,7 +138,7 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
             );
           })}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

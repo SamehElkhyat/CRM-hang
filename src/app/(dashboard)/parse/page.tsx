@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, PenLine } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { PageHeader } from "@/components/layout/page-header";
 import { ParseWorkspace } from "@/components/parse/parse-workspace";
 import { createClient } from "@/lib/supabase/server";
 
@@ -13,19 +14,21 @@ export default async function ParsePage() {
     .order("name");
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">تحليل الحجز</h1>
-          <p className="text-sm text-muted-foreground">
-            الصق نص الحجز العربي ليقوم النظام باستخراج البيانات، التحقق من التكرار،
-            وحساب التكلفة تلقائياً
-          </p>
-        </div>
-        <Link href="/bookings/new" className="text-sm text-primary underline underline-offset-2">
-          تفضل الإدخال اليدوي؟ أضف حجزاً بدون ذكاء اصطناعي
-        </Link>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        eyebrow="الاستخراج الذكي"
+        title="تحليل الحجز"
+        description="الصق نص الحجز العربي ليقوم النظام باستخراج البيانات، التحقق من التكرار، وحساب التكلفة تلقائياً"
+        actions={
+          <Link
+            href="/bookings/new"
+            className="group inline-flex items-center gap-2 border-b border-[var(--hairline-strong)] pb-1 text-[13px] font-medium text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+          >
+            <PenLine className="size-3.5" />
+            أو أضف حجزاً يدوياً
+          </Link>
+        }
+      />
 
       {error && (
         <Alert variant="destructive">

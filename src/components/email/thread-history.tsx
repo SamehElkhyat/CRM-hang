@@ -25,32 +25,40 @@ export function ThreadHistory({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {drafts.map((d) => (
-        <button
-          key={d.id}
-          type="button"
-          onClick={() => onSelect(d.id)}
-          className={cn(
-            "flex items-center justify-between rounded-lg border px-3 py-2 text-start text-sm transition-colors",
-            d.id === activeDraftId
-              ? "border-primary bg-primary/5"
-              : "border-border/60 hover:bg-accent/40",
-          )}
-        >
-          <div className="flex items-center gap-2">
-            {d.status === "sent" ? (
-              <CheckCircle2 className="size-3.5 text-chart-3" />
-            ) : (
-              <FileText className="size-3.5 text-muted-foreground" />
+    <div className="flex flex-col gap-1.5">
+      {drafts.map((d) => {
+        const isActive = d.id === activeDraftId;
+        return (
+          <button
+            key={d.id}
+            type="button"
+            onClick={() => onSelect(d.id)}
+            className={cn(
+              "group/draft relative flex flex-col gap-1 rounded-lg border px-3 py-2.5 text-start transition-all duration-300",
+              isActive
+                ? "border-[var(--hairline-strong)] bg-accent/70"
+                : "border-transparent hover:border-[var(--hairline)] hover:bg-accent/40",
             )}
-            <span className="truncate">{d.subject || "(بدون عنوان)"}</span>
-          </div>
-          <span className="shrink-0 text-xs text-muted-foreground">
-            {STATUS_LABEL[d.status]}
-          </span>
-        </button>
-      ))}
+          >
+            {isActive && (
+              <span className="absolute inset-y-2.5 start-0 w-[2px] rounded-full bg-foreground" />
+            )}
+            <div className="flex items-center gap-2">
+              {d.status === "sent" ? (
+                <CheckCircle2 className="size-3.5 shrink-0 text-chart-3" />
+              ) : (
+                <FileText className="size-3.5 shrink-0 text-muted-foreground" />
+              )}
+              <span className="truncate text-[13px] font-medium">
+                {d.subject || "(بدون عنوان)"}
+              </span>
+            </div>
+            <span className="ps-5 text-[11px] text-muted-foreground">
+              {STATUS_LABEL[d.status]}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

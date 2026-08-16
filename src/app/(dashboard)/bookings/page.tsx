@@ -1,16 +1,9 @@
 import Link from "next/link";
 import { CalendarCheck, Plus } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
+import { PageHeader } from "@/components/layout/page-header";
+import { BookingsTable, type BookingRow } from "@/components/bookings/bookings-table";
+import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/get-current-profile";
 
@@ -46,89 +39,87 @@ export default async function BookingsPage({
 
   const { data: bookings, error } = await query;
 
+  const rows: BookingRow[] = (bookings ?? []).map((b) => ({
+    id: b.id,
+    guest_name: b.guest_name,
+    check_in: b.check_in,
+    check_out: b.check_out,
+    status: b.status,
+    total_cost: b.total_cost,
+    hotel_name: (b.hotels as unknown as { name: string } | null)?.name ?? null,
+  }));
+
+  const tabs = [
+    { key: "all", label: "الكل", href: "/bookings" },
+    { key: "following", label: "متابعاتي", href: "/bookings?filter=following" },
+  ];
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">الحجوزات</h1>
-          <p className="text-sm text-muted-foreground">جميع الحجوزات المسجلة في النظام</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant={filter === "all" ? "default" : "outline"} size="sm" render={<Link href="/bookings" />}>
-            الكل
-          </Button>
-          <Button
-            variant={filter === "following" ? "default" : "outline"}
-            size="sm"
-            render={<Link href="/bookings?filter=following" />}
-          >
-            متابعاتي
-          </Button>
-          <Button size="sm" className="glow-primary-hover" render={<Link href="/bookings/new" />}>
-            <Plus />
-            إضافة حجز
-          </Button>
-        </div>
-      </div>
-
-      {error && <p className="text-sm text-destructive">تعذر تحميل الحجوزات: {error.message}</p>}
-
-      {bookings && bookings.length === 0 && (
-        <Card className="glass-panel">
-          <CardContent className="flex flex-col items-center gap-2 py-12 text-center">
-            <CalendarCheck className="size-8 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              {filter === "following" ? (
-                "لا توجد حجوزات ضمن متابعاتك بعد."
-              ) : (
-                <>
-                  لا توجد حجوزات بعد.{" "}
-                  <Link href="/parse" className="text-primary underline">
-                    ابدأ بتحليل حجز جديد
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        eyebrow="السجل"
+        title="الحجوزات"
+        description="جميع الحجوزات المسجلة في النظام"
+        actions={
+          <>
+            {/* segmented control — one recessed track, active pill lifts out */}
+            <div className="flex items-center gap-1 rounded-xl border border-[var(--hairline)] bg-muted/40 p-1">
+              {tabs.map((tab) => {
+                const isActive = filter === tab.key;
+                return (
+                  <Link
+                    key={tab.key}
+                    href={tab.href}
+                    className={cn(
+                      "rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+                      isActive
+                        ? "bg-card text-foreground shadow-[0_1px_3px_rgb(0_0_0_/_0.2)]"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {tab.label}
                   </Link>
-                </>
-              )}
-            </p>
-          </CardContent>
-        </Card>
+                );
+              })}
+            </div>
+            <Button className="glow-primary-hover" render={<Link href="/bookings/new" />}>
+              <Plus />
+              إضافة حجز
+            </Button>
+          </>
+        }
+      />
+
+      {error && (
+        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">
+          تعذر تحميل الحجوزات: {error.message}
+        </p>
       )}
 
-      {bookings && bookings.length > 0 && (
-        <Card className="glass-panel overflow-hidden p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>الضيف</TableHead>
-                <TableHead>الفندق</TableHead>
-                <TableHead>الوصول</TableHead>
-                <TableHead>المغادرة</TableHead>
-                <TableHead>التكلفة</TableHead>
-                <TableHead>الحالة</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bookings.map((booking) => (
-                <TableRow key={booking.id} className="cursor-pointer">
-                  <TableCell className="p-0">
-                    <Link href={`/bookings/${booking.id}`} className="block px-4 py-3">
-                      {booking.guest_name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {(booking.hotels as unknown as { name: string } | null)?.name ?? "—"}
-                  </TableCell>
-                  <TableCell>{booking.check_in}</TableCell>
-                  <TableCell>{booking.check_out}</TableCell>
-                  <TableCell>{booking.total_cost.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <BookingStatusBadge status={booking.status} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+      {rows.length === 0 && !error && (
+        <div className="glass-panel flex flex-col items-center gap-3 px-6 py-20 text-center">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-muted/60">
+            <CalendarCheck className="size-5 text-muted-foreground" />
+          </div>
+          <p className="text-[13.5px] text-muted-foreground">
+            {filter === "following" ? (
+              "لا توجد حجوزات ضمن متابعاتك بعد."
+            ) : (
+              <>
+                لا توجد حجوزات بعد.{" "}
+                <Link
+                  href="/parse"
+                  className="text-foreground underline underline-offset-4"
+                >
+                  ابدأ بتحليل حجز جديد
+                </Link>
+              </>
+            )}
+          </p>
+        </div>
       )}
+
+      {rows.length > 0 && <BookingsTable bookings={rows} />}
     </div>
   );
 }

@@ -32,20 +32,22 @@ export default async function EmailStudioPage({
   } | null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
+    <div className="flex flex-col gap-8">
+      <header className="animate-fade-in-up">
         <Link
           href={`/bookings/${id}`}
-          className="mb-2 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="eyebrow inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
         >
-          <ArrowRight className="size-3.5" />
+          <ArrowRight className="size-3" />
           العودة لتفاصيل الحجز
         </Link>
-        <h1 className="text-2xl font-bold">استوديو البريد</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="mt-2 text-[1.75rem] font-semibold tracking-[-0.03em] lg:text-[2.125rem]">
+          استوديو البريد
+        </h1>
+        <p className="mt-1.5 text-[13.5px] text-muted-foreground">
           {booking.guest_name} · {hotel?.name ?? "—"}
         </p>
-      </div>
+      </header>
 
       <EmailStudioWorkspace
         bookingId={id}
