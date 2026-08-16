@@ -54,7 +54,7 @@ export default async function HotelsPage() {
             className="stat-tile animate-fade-in-up group flex flex-col gap-5 p-5"
             style={{ animationDelay: `${i * 55}ms` }}
           >
-            <div className="stat-tile-blob bg-chart-1" aria-hidden />
+            <div className="stat-tile-blob bg-chart-2" aria-hidden />
 
             <div className="relative z-10 flex items-start justify-between gap-3">
               <div className="flex size-10 items-center justify-center rounded-xl bg-foreground/8 transition-transform duration-500 group-hover:scale-105">

@@ -1,14 +1,25 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Restrained on purpose: the only two colors that appear anywhere in this
+// set are the brand's own wine-red (--primary) and navy (--chart-2) — used
+// once each, on the two metrics worth calling out. Everything else stays
+// neutral so the accents actually read as intentional, not decorative noise.
 const ACCENT = {
-  primary: { blob: "bg-chart-1", chip: "bg-chart-1/12 text-chart-1", rule: "bg-chart-1/40" },
-  amber: { blob: "bg-chart-4", chip: "bg-chart-4/12 text-chart-4", rule: "bg-chart-4/40" },
-  green: { blob: "bg-chart-3", chip: "bg-chart-3/12 text-chart-3", rule: "bg-chart-3/40" },
-  red: {
-    blob: "bg-destructive",
-    chip: "bg-destructive/12 text-destructive",
-    rule: "bg-destructive/40",
+  brand: {
+    blob: "bg-primary",
+    chip: "bg-primary/10 text-primary",
+    rule: "bg-primary/35",
+  },
+  navy: {
+    blob: "bg-chart-2",
+    chip: "bg-chart-2/10 text-chart-2",
+    rule: "bg-chart-2/35",
+  },
+  neutral: {
+    blob: "bg-foreground/50",
+    chip: "bg-foreground/8 text-foreground",
+    rule: "bg-foreground/15",
   },
 } as const;
 
@@ -16,7 +27,7 @@ export function StatCard({
   label,
   value,
   icon: Icon,
-  accent,
+  accent = "neutral",
   index = 0,
   featured = false,
 }: {
@@ -27,7 +38,7 @@ export function StatCard({
   index?: number;
   featured?: boolean;
 }) {
-  const tone = ACCENT[accent ?? "primary"];
+  const tone = ACCENT[accent];
 
   return (
     <div

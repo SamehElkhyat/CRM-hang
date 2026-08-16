@@ -90,7 +90,7 @@ export default async function DashboardHomePage() {
             label="إجمالي الحجوزات"
             value={totalBookings ?? 0}
             icon={ListChecks}
-            accent="primary"
+            accent="brand"
             index={0}
             featured
           />
@@ -100,21 +100,21 @@ export default async function DashboardHomePage() {
             label="قيد المراجعة"
             value={pendingCount ?? 0}
             icon={CalendarClock}
-            accent="amber"
+            accent="neutral"
             index={1}
           />
           <StatCard
             label="تم إرسال البريد"
             value={sentCount ?? 0}
             icon={CheckCircle2}
-            accent="green"
+            accent="neutral"
             index={2}
           />
           <StatCard
             label="الفنادق النشطة"
             value={hotelsCount ?? 0}
             icon={Hotel}
-            accent="primary"
+            accent="navy"
             index={3}
           />
           <Link
