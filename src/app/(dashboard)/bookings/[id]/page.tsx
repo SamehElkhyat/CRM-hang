@@ -212,7 +212,7 @@ export default async function BookingDetailPage({
             style={{ animationDelay: "240ms" }}
           >
             <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
-              النص الأصلي للحجز
+الوصف / ملاحظات
             </p>
             <div className="p-5">
               <pre

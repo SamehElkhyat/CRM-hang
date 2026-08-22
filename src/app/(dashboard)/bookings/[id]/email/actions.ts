@@ -25,10 +25,9 @@ export async function updateDraftContent(
   return {};
 }
 
-// Starts a blank draft with no AI call at all — the agent types the subject
-// and body directly in the same editor (save / proofread / audit-compare /
-// send all stay available and fully optional either way).
-export async function createManualDraft(
+// Starts a blank draft — the agent types the subject and body directly in
+// the editor (save / send stay available either way).
+export async function createDraft(
   bookingId: string,
 ): Promise<{ data?: EmailDraft; error?: string }> {
   const auth = await requireAuthedSupabase();

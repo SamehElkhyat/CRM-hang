@@ -108,10 +108,10 @@ export default async function BookingsPage({
               <>
                 لا توجد حجوزات بعد.{" "}
                 <Link
-                  href="/parse"
+                  href="/bookings/new"
                   className="text-foreground underline underline-offset-4"
                 >
-                  ابدأ بتحليل حجز جديد
+                  ابدأ بإضافة حجز جديد
                 </Link>
               </>
             )}

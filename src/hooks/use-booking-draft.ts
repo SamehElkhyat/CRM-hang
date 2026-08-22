@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { calculateBookingCost } from "@/lib/cost/calculate-cost";
 import { createBooking } from "@/app/(dashboard)/bookings/actions";
-import type { BookingDraft } from "@/components/parse/extraction-review-form";
+import type { BookingDraft } from "@/components/bookings/booking-form-fields";
 import type { Database, DuplicateCandidate } from "@/types/database.types";
 
 type Hotel = Database["public"]["Tables"]["hotels"]["Row"];
@@ -31,9 +31,8 @@ function parseChildrenAges(text: string): number[] {
     .filter((n) => Number.isFinite(n) && n >= 0);
 }
 
-// Shared "review details → check duplicates → confirm cost → save" logic
-// used by both the AI-parsed flow (Parse tab) and the plain manual-entry
-// form — everything after the raw text is captured is identical.
+// Shared "fill in details → check duplicates → confirm cost → save" logic
+// for the manual booking-entry form.
 export function useBookingDraft(hotels: Hotel[], initialDraft: BookingDraft = EMPTY_BOOKING_DRAFT) {
   const router = useRouter();
   const [draft, setDraft] = useState<BookingDraft>(initialDraft);

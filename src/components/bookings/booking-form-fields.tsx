@@ -30,11 +30,11 @@ export interface BookingDraft {
   notes: string;
 }
 
-export function ExtractionReviewForm({
+export function BookingFormFields({
   hotels,
   draft,
   onChange,
-  title = "مراجعة البيانات المستخرجة",
+  title = "بيانات الحجز",
 }: {
   hotels: Hotel[];
   draft: BookingDraft;

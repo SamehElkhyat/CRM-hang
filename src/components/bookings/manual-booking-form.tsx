@@ -3,7 +3,7 @@
 import { Loader2, Save, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExtractionReviewForm } from "@/components/parse/extraction-review-form";
+import { BookingFormFields } from "@/components/bookings/booking-form-fields";
 import { DuplicateWarningCard } from "@/components/bookings/duplicate-warning-card";
 import { CostBreakdownTable } from "@/components/bookings/cost-breakdown-table";
 import { useBookingDraft } from "@/hooks/use-booking-draft";
@@ -27,9 +27,8 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
   function handleSave() {
     const hotelName = hotels.find((h) => h.id === draft.hotelId)?.name ?? "";
     const description = draft.notes.trim();
-    // This form has no pasted source text (that's the whole point) — fall
-    // back to a short synthesized summary so the booking still has a
-    // human-readable record of how it was created.
+    // Fall back to a short synthesized summary if no description was typed,
+    // so the booking still has a human-readable record of how it was created.
     const rawText =
       description ||
       [
@@ -46,12 +45,7 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <ExtractionReviewForm
-        hotels={hotels}
-        draft={draft}
-        onChange={updateDraft}
-        title="بيانات الحجز"
-      />
+      <BookingFormFields hotels={hotels} draft={draft} onChange={updateDraft} />
 
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="outline" onClick={checkDuplicates} disabled={isCheckingDuplicates}>

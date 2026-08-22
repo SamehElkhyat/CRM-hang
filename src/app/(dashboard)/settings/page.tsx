@@ -47,11 +47,6 @@ export default async function SettingsPage() {
       hint: "قاعدة البيانات، المصادقة",
     },
     {
-      label: "Claude (Anthropic)",
-      configured: Boolean(process.env.ANTHROPIC_API_KEY),
-      hint: "تحليل النصوص العربية، التدقيق اللغوي",
-    },
-    {
       label: "Resend",
       configured: Boolean(process.env.RESEND_API_KEY),
       hint: "إرسال رسائل البريد الإلكتروني",

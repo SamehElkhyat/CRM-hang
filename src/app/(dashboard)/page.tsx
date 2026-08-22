@@ -74,10 +74,10 @@ export default async function DashboardHomePage() {
           </p>
         </div>
         <Link
-          href="/parse"
+          href="/bookings/new"
           className="group inline-flex items-center gap-2 border-b border-[var(--hairline-strong)] pb-1 text-[13.5px] font-medium transition-colors hover:border-foreground"
         >
-          تحليل حجز جديد
+          إضافة حجز جديد
           <ArrowUpLeft className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:-translate-x-0.5" />
         </Link>
       </header>
@@ -153,8 +153,8 @@ export default async function DashboardHomePage() {
           {!recentBookings || recentBookings.length === 0 ? (
             <p className="px-6 py-14 text-center text-[13.5px] text-muted-foreground">
               لا توجد حجوزات بعد.{" "}
-              <Link href="/parse" className="text-foreground underline underline-offset-4">
-                ابدأ بتحليل حجز جديد
+              <Link href="/bookings/new" className="text-foreground underline underline-offset-4">
+                ابدأ بإضافة حجز جديد
               </Link>
             </p>
           ) : (
