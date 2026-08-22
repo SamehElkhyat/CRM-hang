@@ -41,7 +41,10 @@ export function Topbar({ user }: { user: CurrentUser }) {
               <div className="px-6">
                 <div className="h-px w-full bg-[var(--hairline)]" />
               </div>
-              <SidebarNav onNavigate={() => setOpen(false)} />
+              <SidebarNav
+                onNavigate={() => setOpen(false)}
+                isAdmin={user.profile?.role === "admin"}
+              />
             </SheetContent>
           </Sheet>
         </div>

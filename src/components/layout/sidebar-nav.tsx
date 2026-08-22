@@ -7,14 +7,21 @@ import { cn } from "@/lib/utils";
 import { navPillSpring } from "@/lib/motion";
 import { NAV_ITEMS } from "./nav-items";
 
-export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+export function SidebarNav({
+  onNavigate,
+  isAdmin = false,
+}: {
+  onNavigate?: () => void;
+  isAdmin?: boolean;
+}) {
   const pathname = usePathname();
+  const visibleItems = NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <nav className="flex flex-col gap-0.5 px-3 py-5">
       <p className="eyebrow px-3 pb-3">التنقل</p>
 
-      {NAV_ITEMS.map((item) => {
+      {visibleItems.map((item) => {
         const isActive =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
         const Icon = item.icon;

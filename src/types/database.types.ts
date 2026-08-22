@@ -250,6 +250,14 @@ export interface Database {
         Args: Record<string, never>;
         Returns: UnreadThread[];
       };
+      get_agent_booking_counts: {
+        Args: Record<string, never>;
+        Returns: AgentBookingCount[];
+      };
+      get_agent_hotel_counts: {
+        Args: { p_agent_id: string };
+        Returns: AgentHotelCount[];
+      };
     };
   };
 }
@@ -290,4 +298,17 @@ export interface UnreadThread {
   unread_count: number;
   last_message: string;
   last_message_at: string;
+}
+
+export interface AgentBookingCount {
+  agent_id: string;
+  full_name: string | null;
+  role: UserRole;
+  booking_count: number;
+}
+
+export interface AgentHotelCount {
+  hotel_id: string;
+  hotel_name: string;
+  booking_count: number;
 }

@@ -5,6 +5,7 @@ import {
   CalendarCheck,
   Building2,
   Settings,
+  Users,
 } from "lucide-react";
 
 export interface NavItem {
@@ -19,5 +20,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/parse", label: "تحليل الحجز", icon: Wand2 },
   { href: "/bookings", label: "الحجوزات", icon: CalendarCheck },
   { href: "/hotels", label: "دليل الفنادق", icon: Building2 },
+  { href: "/team", label: "الفريق", icon: Users, adminOnly: true },
   { href: "/settings", label: "الإعدادات", icon: Settings },
 ];

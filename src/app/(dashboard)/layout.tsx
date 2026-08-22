@@ -16,7 +16,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="ambient-canvas flex min-h-screen w-full bg-background">
-      <AppSidebar />
+      <AppSidebar isAdmin={user.profile?.role === "admin"} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar user={user} />
         <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 lg:px-8 lg:py-8">

@@ -5,7 +5,7 @@ import { CalendarCheck } from "lucide-react";
 import { SidebarNav } from "./sidebar-nav";
 import { EASE_OUT_EXPO } from "@/lib/motion";
 
-export function AppSidebar() {
+export function AppSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   return (
     <motion.aside
       initial={{ x: -28, opacity: 0 }}
@@ -38,7 +38,7 @@ export function AppSidebar() {
         <div className="h-px w-full bg-[var(--hairline)]" />
       </div>
 
-      <SidebarNav />
+      <SidebarNav isAdmin={isAdmin} />
     </motion.aside>
   );
 }
