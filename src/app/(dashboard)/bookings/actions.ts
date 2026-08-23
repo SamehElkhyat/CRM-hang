@@ -51,26 +51,27 @@ export async function updateBookingStatus(
   bookingId: string,
   status: BookingStatus,
 ): Promise<{ error?: string }> {
-  const auth = await requireAuthedSupabase();
-  if (!auth.ok) return { error: "غير مصرح" };
+  const admin = await requireAdmin();
+  if (!admin.ok) return { error: "تغيير حالة الحجز متاح للمسؤولين فقط" };
 
-  const { error } = await auth.supabase
+  const supabase = await createClient();
+  const { error } = await supabase
     .from("bookings")
     .update({ status })
     .eq("id", bookingId);
 
   if (error) return { error: error.message };
 
-  const { data: profile } = await auth.supabase
+  const { data: profile } = await supabase
     .from("profiles")
     .select("full_name")
-    .eq("id", auth.userId)
+    .eq("id", admin.user.id)
     .single();
 
   const actorName = profile?.full_name || "أحد الأعضاء";
-  const { error: commentError } = await auth.supabase.from("booking_comments").insert({
+  const { error: commentError } = await supabase.from("booking_comments").insert({
     booking_id: bookingId,
-    author_id: auth.userId,
+    author_id: admin.user.id,
     is_system: true,
     message: `غيّر ${actorName} حالة الحجز إلى: ${BOOKING_STATUS_LABELS[status]}`,
   });

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { markBookingRead } from "@/app/(dashboard)/bookings/actions";
 import type { UnreadThread } from "@/types/database.types";
 
 export function useBookingNotifications(currentUserId: string) {
@@ -61,7 +62,22 @@ export function useBookingNotifications(currentUserId: string) {
     };
   }, [currentUserId, refetch, supabase]);
 
+  // Called when the user actually opens a notification (clicks it in the
+  // bell dropdown). Clears it immediately on screen — rather than waiting on
+  // some other, unrelated comment to arrive and trigger a refetch — and
+  // persists the read marker server-side so it stays cleared.
+  const markThreadRead = useCallback((bookingId: string) => {
+    setThreads((prev) => prev.filter((t) => t.booking_id !== bookingId));
+    markBookingRead(bookingId)
+      .then((result) => {
+        if (result.error) console.error("[notifications] mark-read failed:", result.error);
+      })
+      .catch((error) => {
+        console.error("[notifications] mark-read failed:", error);
+      });
+  }, []);
+
   const unreadCount = threads.reduce((sum, t) => sum + t.unread_count, 0);
 
-  return { threads, unreadCount, isLoading, refetch };
+  return { threads, unreadCount, isLoading, refetch, markThreadRead };
 }

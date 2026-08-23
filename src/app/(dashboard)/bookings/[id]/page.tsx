@@ -4,6 +4,7 @@ import { ArrowRight, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookingStatusSelect } from "@/components/bookings/booking-status-select";
+import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
 import { CostBreakdownTable } from "@/components/bookings/cost-breakdown-table";
 import { AuditLogTimeline } from "@/components/bookings/audit-log-timeline";
 import { CommentThread, type CommentWithAuthor } from "@/components/bookings/comment-thread";
@@ -121,7 +122,11 @@ export default async function BookingDetailPage({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <FollowToggle bookingId={booking.id} initialFollowing={Boolean(followRow)} />
-          <BookingStatusSelect bookingId={booking.id} status={booking.status} />
+          {currentUser?.profile?.role === "admin" ? (
+            <BookingStatusSelect bookingId={booking.id} status={booking.status} />
+          ) : (
+            <BookingStatusBadge status={booking.status} />
+          )}
           <Button
             className="glow-primary-hover"
             render={<Link href={`/bookings/${booking.id}/email`} />}

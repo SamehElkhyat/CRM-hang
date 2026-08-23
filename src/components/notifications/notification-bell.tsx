@@ -15,7 +15,8 @@ import {
 import { useBookingNotifications } from "@/hooks/use-booking-notifications";
 
 export function NotificationBell({ currentUserId }: { currentUserId: string }) {
-  const { threads, unreadCount, isLoading } = useBookingNotifications(currentUserId);
+  const { threads, unreadCount, isLoading, markThreadRead } =
+    useBookingNotifications(currentUserId);
 
   return (
     <Popover>
@@ -52,6 +53,7 @@ export function NotificationBell({ currentUserId }: { currentUserId: string }) {
               <Link
                 key={thread.booking_id}
                 href={`/bookings/${thread.booking_id}`}
+                onClick={() => markThreadRead(thread.booking_id)}
                 className="row-interactive flex items-start gap-3 border-b border-[var(--hairline)] px-4 py-3.5 text-start last:border-0"
               >
                 <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-chart-1/12">
