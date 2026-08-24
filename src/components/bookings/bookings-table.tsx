@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpLeft } from "lucide-react";
+import { ArrowUpLeft, Zap } from "lucide-react";
 import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
 import { staggerTight, fadeInUp } from "@/lib/motion";
-import type { BookingStatus } from "@/types/database.types";
+import type { BookingEntryType, BookingStatus } from "@/types/database.types";
 
 export interface BookingRow {
   id: string;
@@ -15,6 +15,7 @@ export interface BookingRow {
   status: BookingStatus;
   total_cost: number;
   hotel_name: string | null;
+  entry_type?: BookingEntryType;
 }
 
 export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
@@ -37,6 +38,14 @@ export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
               className="row-interactive group grid grid-cols-1 gap-x-4 gap-y-2 border-b border-[var(--hairline)] px-6 py-4 last:border-0 lg:grid-cols-[1.4fr_1.2fr_0.9fr_0.9fr_0.8fr_auto] lg:items-center"
             >
               <div className="flex items-center gap-2.5">
+                {booking.entry_type === "quick" && (
+                  <span
+                    className="flex size-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
+                    title="حجز سريع"
+                  >
+                    <Zap className="size-3" />
+                  </span>
+                )}
                 <span className="text-[14px] font-medium tracking-[-0.01em]">
                   {booking.guest_name}
                 </span>

@@ -24,7 +24,7 @@ export default async function AgentHotelBookingsPage({
     supabase.from("hotels").select("id, name").eq("id", hotelId).single(),
     supabase
       .from("bookings")
-      .select("id, guest_name, check_in, check_out, status, total_cost")
+      .select("id, guest_name, check_in, check_out, status, total_cost, entry_type")
       .eq("created_by", agentId)
       .eq("hotel_id", hotelId)
       .is("deleted_at", null)
@@ -40,6 +40,7 @@ export default async function AgentHotelBookingsPage({
     check_out: b.check_out,
     status: b.status,
     total_cost: b.total_cost,
+    entry_type: b.entry_type,
     hotel_name: hotel.name,
   }));
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, Phone, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookingStatusSelect } from "@/components/bookings/booking-status-select";
@@ -9,6 +9,8 @@ import { CostBreakdownTable } from "@/components/bookings/cost-breakdown-table";
 import { AuditLogTimeline } from "@/components/bookings/audit-log-timeline";
 import { CommentThread, type CommentWithAuthor } from "@/components/bookings/comment-thread";
 import { FollowToggle } from "@/components/bookings/follow-toggle";
+import { BookingAttachments } from "@/components/bookings/booking-attachments";
+import type { AttachmentWithUploader } from "@/components/bookings/attachments-list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/get-current-profile";
 import { calculateBookingCost } from "@/lib/cost/calculate-cost";
@@ -42,22 +44,28 @@ export default async function BookingDetailPage({
     child_policy: ChildPolicy;
   } | null;
 
-  const [{ count: draftCount }, { data: commentsRaw }, { data: followRow }] = await Promise.all([
-    supabase.from("email_drafts").select("*", { count: "exact", head: true }).eq("booking_id", id),
-    supabase
-      .from("booking_comments")
-      .select("id, booking_id, author_id, message, is_system, created_at, profiles(full_name)")
-      .eq("booking_id", id)
-      .order("created_at", { ascending: true }),
-    currentUser
-      ? supabase
-          .from("booking_followers")
-          .select("booking_id")
-          .eq("booking_id", id)
-          .eq("user_id", currentUser.id)
-          .maybeSingle()
-      : Promise.resolve({ data: null }),
-  ]);
+  const [{ count: draftCount }, { data: commentsRaw }, { data: followRow }, { data: attachmentsRaw }] =
+    await Promise.all([
+      supabase.from("email_drafts").select("*", { count: "exact", head: true }).eq("booking_id", id),
+      supabase
+        .from("booking_comments")
+        .select("id, booking_id, author_id, message, is_system, created_at, profiles(full_name)")
+        .eq("booking_id", id)
+        .order("created_at", { ascending: true }),
+      currentUser
+        ? supabase
+            .from("booking_followers")
+            .select("booking_id")
+            .eq("booking_id", id)
+            .eq("user_id", currentUser.id)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
+      supabase
+        .from("booking_attachments")
+        .select("id, file_name, file_path, file_type, file_size, created_at, profiles(full_name)")
+        .eq("booking_id", id)
+        .order("created_at", { ascending: false }),
+    ]);
 
   const comments: CommentWithAuthor[] = (commentsRaw ?? []).map((c) => ({
     id: c.id,
@@ -68,6 +76,17 @@ export default async function BookingDetailPage({
     created_at: c.created_at,
     author_name:
       (c.profiles as unknown as { full_name: string | null } | null)?.full_name ?? null,
+  }));
+
+  const attachments: AttachmentWithUploader[] = (attachmentsRaw ?? []).map((a) => ({
+    id: a.id,
+    file_name: a.file_name,
+    file_path: a.file_path,
+    file_type: a.file_type,
+    file_size: a.file_size,
+    created_at: a.created_at,
+    uploader_name:
+      (a.profiles as unknown as { full_name: string | null } | null)?.full_name ?? null,
   }));
 
   let cost = null;
@@ -99,6 +118,27 @@ export default async function BookingDetailPage({
     { icon: Mail, value: hotel?.sales_email || "—", tag: "مبيعات" },
   ];
 
+  const isQuick = booking.entry_type === "quick";
+
+  const contentCard = (
+    <div
+      className="glass-panel animate-fade-in-up overflow-hidden"
+      style={{ animationDelay: isQuick ? "60ms" : "240ms" }}
+    >
+      <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
+        {isQuick ? "النص الملصوق" : "الوصف / ملاحظات"}
+      </p>
+      <div className="p-5">
+        <pre
+          dir="rtl"
+          className="whitespace-pre-wrap rounded-lg border border-[var(--hairline)] bg-muted/40 p-4 font-sans text-[13px] leading-[1.9]"
+        >
+          {booking.raw_arabic_text}
+        </pre>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col gap-8">
       <header className="animate-fade-in-up flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
@@ -110,9 +150,20 @@ export default async function BookingDetailPage({
             <ArrowRight className="size-3" />
             الحجوزات
           </Link>
-          <h1 className="mt-2 truncate text-[1.75rem] font-semibold tracking-[-0.03em] lg:text-[2.125rem]">
-            {booking.guest_name}
-          </h1>
+          <div className="mt-2 flex items-center gap-2">
+            <h1 className="truncate text-[1.75rem] font-semibold tracking-[-0.03em] lg:text-[2.125rem]">
+              {booking.guest_name}
+            </h1>
+            {isQuick && (
+              <Badge
+                variant="outline"
+                className="border-primary/25 bg-primary/10 text-primary"
+              >
+                <Zap className="size-3" />
+                حجز سريع
+              </Badge>
+            )}
+          </div>
           <p className="mt-1.5 text-[13.5px] text-muted-foreground">
             {hotel?.name ?? "—"} ·{" "}
             <span className="tabular-nums">
@@ -140,6 +191,8 @@ export default async function BookingDetailPage({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="flex flex-col gap-6">
+          {isQuick && contentCard}
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div
               className="glass-panel animate-fade-in-up overflow-hidden"
@@ -195,7 +248,7 @@ export default async function BookingDetailPage({
             </div>
           </div>
 
-          {cost && (
+          {cost && !isQuick && (
             <div
               className="glass-panel animate-fade-in-up overflow-hidden"
               style={{ animationDelay: "180ms" }}
@@ -212,22 +265,13 @@ export default async function BookingDetailPage({
             </div>
           )}
 
-          <div
-            className="glass-panel animate-fade-in-up overflow-hidden"
-            style={{ animationDelay: "240ms" }}
-          >
-            <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
-الوصف / ملاحظات
-            </p>
-            <div className="p-5">
-              <pre
-                dir="rtl"
-                className="whitespace-pre-wrap rounded-lg border border-[var(--hairline)] bg-muted/40 p-4 font-sans text-[13px] leading-[1.9]"
-              >
-                {booking.raw_arabic_text}
-              </pre>
-            </div>
-          </div>
+          {!isQuick && contentCard}
+
+          <BookingAttachments
+            bookingId={booking.id}
+            attachments={attachments}
+            currentUserName={currentUser?.profile?.full_name ?? null}
+          />
 
           <AuditLogTimeline bookingId={booking.id} />
         </div>

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { calculateBookingCost } from "@/lib/cost/calculate-cost";
 import { createBooking } from "@/app/(dashboard)/bookings/actions";
 import type { BookingDraft } from "@/components/bookings/booking-form-fields";
-import type { Database, DuplicateCandidate } from "@/types/database.types";
+import type { BookingEntryType, Database, DuplicateCandidate } from "@/types/database.types";
 
 type Hotel = Database["public"]["Tables"]["hotels"]["Row"];
 
@@ -102,7 +102,7 @@ export function useBookingDraft(hotels: Hotel[], initialDraft: BookingDraft = EM
     }
   }
 
-  async function save(rawText: string) {
+  async function save(rawText: string, entryType: BookingEntryType = "detailed") {
     if (!draft.hotelId) {
       toast.error("الرجاء اختيار الفندق");
       return;
@@ -130,6 +130,7 @@ export function useBookingDraft(hotels: Hotel[], initialDraft: BookingDraft = EM
         total_cost: cost.total,
         children_ages: childrenAges,
         raw_arabic_text: rawText,
+        entry_type: entryType,
       });
 
       if (result.error) throw new Error(result.error);

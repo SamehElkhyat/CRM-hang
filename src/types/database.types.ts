@@ -5,6 +5,7 @@
 export type UserRole = "admin" | "agent";
 export type BookingStatus = "pending" | "confirmed" | "sent" | "cancelled";
 export type DraftStatus = "draft" | "proofread" | "audited" | "sent";
+export type BookingEntryType = "detailed" | "quick";
 
 export interface RoomType {
   name: string;
@@ -75,6 +76,7 @@ export interface Database {
           total_cost: number;
           raw_arabic_text: string;
           status: BookingStatus;
+          entry_type: BookingEntryType;
           created_by: string | null;
           deleted_at: string | null;
           created_at: string;
@@ -225,6 +227,42 @@ export interface Database {
             columns: ["booking_id"];
             isOneToOne: false;
             referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      booking_attachments: {
+        Row: {
+          id: string;
+          booking_id: string;
+          uploaded_by: string | null;
+          file_name: string;
+          file_path: string;
+          file_type: string;
+          file_size: number;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["booking_attachments"]["Row"]> & {
+          booking_id: string;
+          file_name: string;
+          file_path: string;
+          file_type: string;
+          file_size: number;
+        };
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "booking_attachments_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "booking_attachments_uploaded_by_fkey";
+            columns: ["uploaded_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
         ];

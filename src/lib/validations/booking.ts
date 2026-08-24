@@ -12,6 +12,7 @@ export const bookingInputSchema = z.object({
   total_cost: z.number().nonnegative(),
   children_ages: z.array(z.number().int().nonnegative()).default([]),
   raw_arabic_text: z.string().trim().min(1, "نص الحجز الأصلي مطلوب"),
+  entry_type: z.enum(["detailed", "quick"]).default("detailed"),
 });
 
 export type BookingInput = z.infer<typeof bookingInputSchema>;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarCheck, Plus } from "lucide-react";
+import { CalendarCheck, Plus, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/page-header";
 import { BookingsTable, type BookingRow } from "@/components/bookings/bookings-table";
@@ -19,7 +19,9 @@ export default async function BookingsPage({
 
   let query = supabase
     .from("bookings")
-    .select("id, guest_name, check_in, check_out, status, total_cost, hotels(name)")
+    .select(
+      "id, guest_name, check_in, check_out, status, total_cost, entry_type, hotels(name)",
+    )
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(100);
@@ -46,6 +48,7 @@ export default async function BookingsPage({
     check_out: b.check_out,
     status: b.status,
     total_cost: b.total_cost,
+    entry_type: b.entry_type,
     hotel_name: (b.hotels as unknown as { name: string } | null)?.name ?? null,
   }));
 
@@ -82,6 +85,10 @@ export default async function BookingsPage({
                 );
               })}
             </div>
+            <Button variant="outline" render={<Link href="/bookings/quick" />}>
+              <Zap />
+              حجز سريع
+            </Button>
             <Button className="glow-primary-hover" render={<Link href="/bookings/new" />}>
               <Plus />
               إضافة حجز

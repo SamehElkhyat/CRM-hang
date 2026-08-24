@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ManualBookingForm } from "@/components/bookings/manual-booking-form";
+import { QuickBookingForm } from "@/components/bookings/quick-booking-form";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function NewBookingPage() {
+export default async function QuickBookingPage() {
   const supabase = await createClient();
   const { data: hotels, error } = await supabase
     .from("hotels")
@@ -16,16 +16,17 @@ export default async function NewBookingPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">إضافة حجز</h1>
+          <h1 className="text-2xl font-bold">حجز سريع</h1>
           <p className="text-sm text-muted-foreground">
-            الفندق واسم الضيف مطلوبان فقط، وباقي الحقول اختيارية.
+            الصق أي نص للحجز كما هو — من واتساب أو البريد أو أي مصدر — بدون الحاجة
+            لملء كل التفاصيل. فقط الفندق واسم الضيف والتواريخ مطلوبة.
           </p>
         </div>
         <Link
-          href="/bookings/quick"
+          href="/bookings/new"
           className="text-sm text-primary underline underline-offset-2"
         >
-          ⚡ تفضل حجز سريع بدل ذلك؟
+          تفضل تعبئة النموذج الكامل؟
         </Link>
       </div>
 
@@ -47,7 +48,7 @@ export default async function NewBookingPage() {
         </Alert>
       )}
 
-      <ManualBookingForm hotels={hotels ?? []} />
+      <QuickBookingForm hotels={hotels ?? []} />
     </div>
   );
 }
