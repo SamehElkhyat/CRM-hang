@@ -165,10 +165,18 @@ export default async function BookingDetailPage({
             )}
           </div>
           <p className="mt-1.5 text-[13.5px] text-muted-foreground">
-            {hotel?.name ?? "—"} ·{" "}
-            <span className="tabular-nums">
-              {booking.check_in} → {booking.check_out}
-            </span>
+            {isQuick ? (
+              <span className="tabular-nums">
+                أُضيف في {new Date(booking.created_at).toLocaleDateString("ar-EG")}
+              </span>
+            ) : (
+              <>
+                {hotel?.name ?? "—"} ·{" "}
+                <span className="tabular-nums">
+                  {booking.check_in} → {booking.check_out}
+                </span>
+              </>
+            )}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -193,60 +201,62 @@ export default async function BookingDetailPage({
         <div className="flex flex-col gap-6">
           {isQuick && contentCard}
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div
-              className="glass-panel animate-fade-in-up overflow-hidden"
-              style={{ animationDelay: "60ms" }}
-            >
-              <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
-                تفاصيل الحجز
-              </p>
-              <dl className="flex flex-col">
-                {detailRows.map((row) => (
-                  <div
-                    key={row.label}
-                    className="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
-                  >
-                    <dt className="text-[12.5px] text-muted-foreground">{row.label}</dt>
-                    <dd
-                      dir={row.ltr ? "ltr" : undefined}
-                      className="text-[13.5px] font-medium"
-                    >
-                      {row.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div
-              className="glass-panel animate-fade-in-up overflow-hidden"
-              style={{ animationDelay: "120ms" }}
-            >
-              <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
-                التواصل مع الفندق
-              </p>
-              <div className="flex flex-col">
-                {contactRows.map((row, i) => {
-                  const Icon = row.icon;
-                  return (
+          {!isQuick && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div
+                className="glass-panel animate-fade-in-up overflow-hidden"
+                style={{ animationDelay: "60ms" }}
+              >
+                <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
+                  تفاصيل الحجز
+                </p>
+                <dl className="flex flex-col">
+                  {detailRows.map((row) => (
                     <div
-                      key={i}
-                      className="flex items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
+                      key={row.label}
+                      className="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
                     >
-                      <Icon className="size-3.5 shrink-0 text-muted-foreground opacity-70" />
-                      <span dir="ltr" className="min-w-0 flex-1 truncate text-start text-[13px]">
+                      <dt className="text-[12.5px] text-muted-foreground">{row.label}</dt>
+                      <dd
+                        dir={row.ltr ? "ltr" : undefined}
+                        className="text-[13.5px] font-medium"
+                      >
                         {row.value}
-                      </span>
-                      <span className="shrink-0 text-[11px] text-muted-foreground">
-                        {row.tag}
-                      </span>
+                      </dd>
                     </div>
-                  );
-                })}
+                  ))}
+                </dl>
+              </div>
+
+              <div
+                className="glass-panel animate-fade-in-up overflow-hidden"
+                style={{ animationDelay: "120ms" }}
+              >
+                <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">
+                  التواصل مع الفندق
+                </p>
+                <div className="flex flex-col">
+                  {contactRows.map((row, i) => {
+                    const Icon = row.icon;
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
+                      >
+                        <Icon className="size-3.5 shrink-0 text-muted-foreground opacity-70" />
+                        <span dir="ltr" className="min-w-0 flex-1 truncate text-start text-[13px]">
+                          {row.value}
+                        </span>
+                        <span className="shrink-0 text-[11px] text-muted-foreground">
+                          {row.tag}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {cost && !isQuick && (
             <div
