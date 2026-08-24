@@ -296,6 +296,10 @@ export interface Database {
         Args: { p_agent_id: string };
         Returns: AgentHotelCount[];
       };
+      get_agent_booking_counts_last_24h: {
+        Args: Record<string, never>;
+        Returns: AgentBookingCount[];
+      };
     };
   };
 }
