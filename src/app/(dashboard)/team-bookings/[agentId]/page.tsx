@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ArrowRight, CalendarCheck, Clock } from "lucide-react";
-import { getCurrentUser } from "@/lib/auth/get-current-profile";
 import { createClient } from "@/lib/supabase/server";
 import { BookingsTable, type BookingRow } from "@/components/bookings/bookings-table";
 
@@ -11,11 +10,6 @@ export default async function AgentBookingsLast24hPage({
   params: Promise<{ agentId: string }>;
 }) {
   const { agentId } = await params;
-
-  const user = await getCurrentUser();
-  if (user?.profile?.role !== "admin") {
-    redirect("/");
-  }
 
   const supabase = await createClient();
   const sinceDate = new Date();

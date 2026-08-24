@@ -1,17 +1,10 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowUpLeft, Clock, ShieldCheck, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/layout/page-header";
-import { getCurrentUser } from "@/lib/auth/get-current-profile";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function TeamBookingsPage() {
-  const user = await getCurrentUser();
-  if (user?.profile?.role !== "admin") {
-    redirect("/");
-  }
-
   const supabase = await createClient();
   const { data: agents, error } = await supabase.rpc("get_agent_booking_counts_last_24h");
 

@@ -20,6 +20,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/bookings", label: "الحجوزات", icon: CalendarCheck },
   { href: "/hotels", label: "دليل الفنادق", icon: Building2 },
   { href: "/team", label: "الفريق", icon: Users, adminOnly: true },
-  { href: "/team-bookings", label: "حجوزات الفريق", icon: History, adminOnly: true },
+  { href: "/team-bookings", label: "حجوزات الفريق", icon: History },
   { href: "/settings", label: "الإعدادات", icon: Settings },
 ];
