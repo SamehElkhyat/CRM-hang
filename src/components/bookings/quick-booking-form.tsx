@@ -10,7 +10,10 @@ import { useBookingDraft, EMPTY_BOOKING_DRAFT } from "@/hooks/use-booking-draft"
 // The one fixed hotel row every quick booking is filed under when no real
 // hotel is picked (supabase/migrations/0007_quick_booking_placeholder_hotel.sql).
 // Inactive, so it never shows up in the normal hotel directory picker.
-const PLACEHOLDER_HOTEL_ID = "00000000-0000-0000-0000-000000000001";
+// Must be the exact nil UUID — Zod's .uuid() validator (booking.ts) only
+// special-cases 00000000-0000-0000-0000-000000000000 itself as valid;
+// any other all-zero-looking id fails its version/variant nibble check.
+const PLACEHOLDER_HOTEL_ID = "00000000-0000-0000-0000-000000000000";
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
