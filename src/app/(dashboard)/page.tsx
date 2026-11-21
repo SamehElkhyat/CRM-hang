@@ -10,6 +10,8 @@ import {
 import { StatCard } from "@/components/dashboard/stat-card";
 import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TeamBoard } from "@/components/team/team-board";
+import { getCurrentUser } from "@/lib/auth/get-current-profile";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardHomePage() {
@@ -21,6 +23,7 @@ export default async function DashboardHomePage() {
     { count: sentCount },
     { count: hotelsCount },
     { data: recentBookings },
+    user,
   ] = await Promise.all([
     supabase
       .from("bookings")
@@ -46,7 +49,10 @@ export default async function DashboardHomePage() {
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(5),
+    getCurrentUser(),
   ]);
+
+  const isAdmin = user?.profile?.role === "admin";
 
   if (bookingsError) {
     return (
@@ -81,6 +87,8 @@ export default async function DashboardHomePage() {
           <ArrowUpLeft className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:-translate-x-0.5" />
         </Link>
       </header>
+
+      {isAdmin && <TeamBoard />}
 
       {/* Asymmetric: featured metric holds the left column at full height,
           the three supporting metrics stack in a 2-up beside it. */}

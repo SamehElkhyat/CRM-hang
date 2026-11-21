@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronLeft, Inbox, ShieldCheck, Zap } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Zap } from "lucide-react";
 import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
 import { cn } from "@/lib/utils";
 import type { BookingEntryType, BookingStatus, UserRole } from "@/types/database.types";
@@ -24,124 +24,101 @@ export interface TeamMember {
 }
 
 function initials(name: string | null) {
-  if (!name) return "—";
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  return parts
+  if (!name) return "؟";
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
     .slice(0, 2)
-    .map((p) => p[0])
+    .map((part) => part[0])
     .join("")
     .toUpperCase();
 }
 
-export function TeamMemberCard({ member, index = 0 }: { member: TeamMember; index?: number }) {
-  const hasNew = member.new_bookings > 0;
-
+function NewBookingsCount({ count }: { count: number }) {
   return (
-    <article
-      className="glass-panel animate-fade-in-up flex h-[460px] min-w-0 flex-col overflow-hidden"
-      style={{ animationDelay: `${index * 40}ms` }}
+    <span
+      className={cn(
+        "inline-flex h-6 shrink-0 items-center gap-1 rounded-full px-2 text-xs font-semibold tabular-nums",
+        count > 0 ? "bg-chart-3 text-background" : "bg-muted text-muted-foreground",
+      )}
+      aria-label={`${count} حجز جديد قيد المراجعة`}
+      title="حجوزات جديدة قيد المراجعة"
     >
-      {/* Header */}
-      <header className="flex items-start gap-3 border-b border-[var(--hairline)] px-4 py-4">
-        <div
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-[14px] font-semibold text-foreground ring-1 ring-[var(--hairline)]"
+      {count.toLocaleString()}
+      <span aria-hidden>جديد</span>
+    </span>
+  );
+}
+
+export function TeamMemberCard({ member }: { member: TeamMember }) {
+  return (
+    <article className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-[var(--hairline)] bg-card">
+      <header className="flex items-start gap-3 border-b border-[var(--hairline)] p-4">
+        <span
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold"
           aria-hidden
         >
           {initials(member.full_name)}
-        </div>
+        </span>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <h2 className="truncate text-[15px] font-semibold tracking-[-0.014em]">
-              {member.full_name || "—"}
-            </h2>
+          <h3 className="flex items-center gap-1 text-base font-semibold tracking-[-0.014em]">
+            <span className="truncate">{member.full_name || "بدون اسم"}</span>
             {member.role === "admin" && (
-              <ShieldCheck className="size-3.5 shrink-0 text-chart-2" aria-label="مسؤول" />
+              <>
+                <ShieldCheck className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <span className="sr-only">مسؤول</span>
+              </>
             )}
-          </div>
-          <p className="mt-0.5 text-[12.5px] text-muted-foreground">
+          </h3>
+          <p className="mt-1 text-xs text-muted-foreground">
             <span className="font-medium tabular-nums text-foreground">
               {member.total_bookings.toLocaleString()}
             </span>{" "}
-            إجمالي الحجوزات
+            حجز إجمالاً
           </p>
         </div>
 
-        <span
-          className={cn(
-            "inline-flex h-6 shrink-0 items-center gap-1 rounded-full px-2.5 text-[11.5px] font-semibold tabular-nums",
-            hasNew
-              ? "bg-chart-3 text-white shadow-[0_6px_16px_-8px_var(--chart-3)]"
-              : "border border-chart-3/25 bg-chart-3/10 text-chart-3",
-          )}
-          title="حجوزات جديدة قيد المراجعة"
-        >
-          {member.new_bookings.toLocaleString()}
-          <span className="font-medium">جديد</span>
-        </span>
+        <NewBookingsCount count={member.new_bookings} />
       </header>
 
-      {/* Body */}
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex items-center justify-between px-4 pt-3 pb-2">
-          <span className="eyebrow">الحجوزات</span>
-          {member.bookings.length > 0 && (
-            <span className="text-[11px] tabular-nums text-muted-foreground">
-              {member.bookings.length.toLocaleString()}
-            </span>
-          )}
-        </div>
-
-        {member.bookings.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 pb-6 text-center">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-muted/60">
-              <Inbox className="size-4 text-muted-foreground" />
-            </div>
-            <p className="text-[12.5px] text-muted-foreground">لا توجد حجوزات لهذا العضو بعد.</p>
-          </div>
-        ) : (
-          <ul className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-2">
-            {member.bookings.map((booking) => (
-              <li key={booking.id}>
-                <Link
-                  href={`/bookings/${booking.id}`}
-                  className="row-interactive group flex items-center gap-2 rounded-lg border-b border-[var(--hairline)] px-2 py-2.5 last:border-0 focus-visible:outline-2 focus-visible:outline-ring"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      {booking.entry_type === "quick" && (
-                        <span
-                          className="flex size-4 shrink-0 items-center justify-center rounded bg-primary/10 text-primary"
-                          title="حجز سريع"
-                        >
-                          <Zap className="size-2.5" />
-                        </span>
-                      )}
-                      <span className="truncate text-[13.5px] font-medium tracking-[-0.01em]">
-                        {booking.guest_name}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
-                      {booking.hotel_name ?? "—"}
-                    </p>
-                    <p
-                      className="mt-0.5 truncate text-[11.5px] tabular-nums text-muted-foreground/80"
-                      dir="ltr"
-                      style={{ textAlign: "right" }}
-                    >
+      {member.bookings.length === 0 ? (
+        <p className="px-4 py-8 text-sm text-muted-foreground">لا توجد حجوزات لهذا العضو بعد.</p>
+      ) : (
+        <ul className="max-h-80 divide-y divide-[var(--hairline)] overflow-y-auto overscroll-contain">
+          {member.bookings.map((booking) => (
+            <li key={booking.id}>
+              <Link
+                href={`/bookings/${booking.id}`}
+                className="flex items-center gap-3 px-4 py-3 transition-colors duration-150 ease-out hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1 text-sm font-medium">
+                    {booking.entry_type === "quick" && (
+                      <>
+                        <Zap className="size-4 shrink-0 text-primary" aria-hidden />
+                        <span className="sr-only">حجز سريع: </span>
+                      </>
+                    )}
+                    <span className="truncate">{booking.guest_name}</span>
+                  </p>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                    {booking.hotel_name ?? "فندق غير محدد"}
+                  </p>
+                  <p className="mt-1 truncate text-xs tabular-nums text-muted-foreground">
+                    <span dir="ltr">
                       {booking.check_in} → {booking.check_out}
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-1">
-                    <BookingStatusBadge status={booking.status} />
-                    <ChevronLeft className="size-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-x-0.5" />
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                    </span>
+                  </p>
+                </div>
+                <BookingStatusBadge status={booking.status} className="text-xs" />
+                <ChevronLeft className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </article>
   );
 }

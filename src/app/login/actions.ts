@@ -20,7 +20,7 @@ export async function signIn(
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     console.error("[auth] signInWithPassword failed:", error.status, error.code, error.message);
@@ -41,18 +41,5 @@ export async function signIn(
     return { error: `فشل تسجيل الدخول: ${error.message}` };
   }
 
-  // Admins land on the Team cards board by default. An explicit `next`
-  // (e.g. a deep link that bounced through login) is always honoured,
-  // and agents keep landing on the dashboard as before.
-  let destination = next || "/";
-  if (destination === "/" && data.user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
-    if (profile?.role === "admin") destination = "/team";
-  }
-
-  redirect(destination);
+  redirect(next || "/");
 }

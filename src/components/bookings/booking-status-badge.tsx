@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { BOOKING_STATUS_LABELS } from "@/lib/booking-status-labels";
+import { cn } from "@/lib/utils";
 import type { BookingStatus } from "@/types/database.types";
 
 const STATUS_STYLE: Record<BookingStatus, { chip: string; dot: string }> = {
@@ -21,10 +22,16 @@ const STATUS_STYLE: Record<BookingStatus, { chip: string; dot: string }> = {
   },
 };
 
-export function BookingStatusBadge({ status }: { status: BookingStatus }) {
+export function BookingStatusBadge({
+  status,
+  className,
+}: {
+  status: BookingStatus;
+  className?: string;
+}) {
   const { chip, dot } = STATUS_STYLE[status];
   return (
-    <Badge variant="outline" className={chip}>
+    <Badge variant="outline" className={cn(chip, className)}>
       <span className={`size-1.5 rounded-full ${dot}`} aria-hidden />
       {BOOKING_STATUS_LABELS[status]}
     </Badge>
