@@ -94,9 +94,9 @@ export function AttachmentUploader({
         handleFiles(e.dataTransfer.files);
       }}
       className={cn(
-        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-5 py-8 text-center transition-all duration-300",
+        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-5 py-8 text-center transition-colors duration-150 ease-out",
         isDragging
-          ? "glow-primary border-primary bg-primary/5"
+          ? "border-primary bg-primary/5"
           : "border-[var(--hairline-strong)] hover:border-primary/40 hover:bg-accent/30",
       )}
     >
@@ -114,15 +114,15 @@ export function AttachmentUploader({
       {uploadingCount > 0 ? (
         <Loader2 className="size-6 animate-spin text-primary" />
       ) : (
-        <UploadCloud className="size-6 text-muted-foreground" />
+        <UploadCloud className="size-6 text-muted-foreground" aria-hidden />
       )}
-      <p className="text-[13.5px] font-medium">
+      <p className="text-sm font-medium">
         {uploadingCount > 0
           ? `جاري رفع ${uploadingCount} ملف...`
           : "اسحب الملفات هنا أو اضغط للاختيار"}
       </p>
-      <p className="text-[11.5px] text-muted-foreground">
-        PDF أو PNG أو JPG — حتى {formatFileSize(MAX_ATTACHMENT_SIZE_BYTES)}
+      <p className="text-xs text-muted-foreground">
+        PDF أو PNG أو JPG، بحد أقصى {formatFileSize(MAX_ATTACHMENT_SIZE_BYTES)}
       </p>
     </div>
   );

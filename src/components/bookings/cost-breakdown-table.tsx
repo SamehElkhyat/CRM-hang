@@ -34,7 +34,7 @@ export function CostBreakdownTable({
         {cost.childCharges.map((c, i) => (
           <TableRow key={i}>
             <TableCell className="text-muted-foreground">
-              طفل بعمر {c.age} — {c.reason}
+              طفل بعمر {c.age}، {c.reason}
             </TableCell>
             <TableCell className="text-end text-muted-foreground">
               {c.charge.toLocaleString()} {currency}

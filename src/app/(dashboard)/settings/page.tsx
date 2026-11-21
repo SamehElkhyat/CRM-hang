@@ -15,8 +15,8 @@ function IntegrationRow({
   return (
     <div className="row-interactive flex items-center justify-between gap-4 border-b border-[var(--hairline)] px-6 py-4 last:border-0">
       <div className="min-w-0">
-        <p className="text-[14px] font-medium tracking-[-0.01em]">{label}</p>
-        <p className="mt-0.5 text-[12px] text-muted-foreground">{hint}</p>
+        <p className="text-sm font-medium tracking-[-0.01em]">{label}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
       </div>
       <Badge
         variant="outline"
@@ -56,54 +56,43 @@ export default async function SettingsPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        eyebrow="الحساب"
         title="الإعدادات"
         description="معلومات الحساب وحالة التكاملات الخارجية"
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-        <div
-          className="glass-panel animate-fade-in-up flex flex-col justify-between gap-8 p-6 lg:col-span-5"
-          style={{ animationDelay: "60ms" }}
-        >
+        <section className="glass-panel flex flex-col justify-between gap-8 p-6 lg:col-span-5">
           <div className="flex items-center justify-between">
-            <p className="eyebrow">الملف الشخصي</p>
+            <h2 className="text-sm font-semibold">الملف الشخصي</h2>
             <span
-              className={
-                isAdmin
-                  ? "flex items-center gap-1.5 rounded-full border border-chart-1/25 bg-chart-1/10 px-2.5 py-1 text-[11px] font-medium text-chart-1"
-                  : "flex items-center gap-1.5 rounded-full border border-[var(--hairline)] bg-muted/50 px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
-              }
+              className="flex items-center gap-1 rounded-full border border-[var(--hairline)] px-2 py-1 text-xs font-medium text-muted-foreground"
             >
-              <ShieldCheck className="size-3" />
+              {isAdmin && <ShieldCheck className="size-3" aria-hidden />}
               {isAdmin ? "مسؤول" : "عضو فريق"}
             </span>
           </div>
 
           <div>
-            <p className="text-[1.5rem] font-semibold tracking-[-0.025em]">
-              {user?.profile?.full_name || "—"}
+            <p className="text-2xl font-semibold tracking-[-0.025em]">
+              {user?.profile?.full_name || "بدون اسم"}
             </p>
-            <p dir="ltr" className="mt-1 text-start text-[13px] text-muted-foreground">
+            <p dir="ltr" className="mt-1 text-start text-sm text-muted-foreground">
               {user?.email}
             </p>
           </div>
-        </div>
+        </section>
 
-        <div
-          className="glass-panel animate-fade-in-up overflow-hidden lg:col-span-7"
-          style={{ animationDelay: "130ms" }}
-        >
+        <section className="glass-panel overflow-hidden lg:col-span-7">
           <div className="border-b border-[var(--hairline)] px-6 py-4">
-            <p className="eyebrow">التكاملات · System Parameters</p>
-            <p className="mt-1.5 text-[12.5px] text-muted-foreground">
+            <h2 className="text-sm font-semibold">التكاملات</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
               حالة مفاتيح الاتصال بالخدمات الخارجية المطلوبة لتشغيل النظام
             </p>
           </div>
           {integrations.map((integration) => (
             <IntegrationRow key={integration.label} {...integration} />
           ))}
-        </div>
+        </section>
       </div>
     </div>
   );

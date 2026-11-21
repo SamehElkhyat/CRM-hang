@@ -12,7 +12,7 @@ export default async function NewHotelPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">إضافة فندق جديد</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] lg:text-display">إضافة فندق جديد</h1>
         <p className="text-sm text-muted-foreground">
           بيانات التواصل، فئات الغرف، وسياسة الأطفال
         </p>

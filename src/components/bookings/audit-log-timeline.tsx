@@ -1,4 +1,4 @@
-import { History, PlusCircle, Pencil } from "lucide-react";
+import { History } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
 const FIELD_LABELS: Record<string, string> = {
@@ -41,8 +41,8 @@ function diffFields(
 }
 
 function formatValue(value: unknown): string {
-  if (value === null || value === undefined || value === "") return "—";
-  if (Array.isArray(value)) return value.length ? value.join(", ") : "—";
+  if (value === null || value === undefined || value === "") return "فارغ";
+  if (Array.isArray(value)) return value.length ? value.join(", ") : "لا يوجد";
   return String(value);
 }
 
@@ -55,17 +55,17 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
     .order("timestamp", { ascending: false });
 
   return (
-    <div className="glass-panel animate-fade-in-up overflow-hidden" style={{ animationDelay: "300ms" }}>
-      <p className="eyebrow flex items-center gap-2 border-b border-[var(--hairline)] px-5 py-3.5">
-        <History className="size-3.5" />
+    <div className="glass-panel overflow-hidden">
+      <h2 className="flex items-center gap-2 border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
+        <History className="size-4 text-muted-foreground" aria-hidden />
         سجل التعديلات
-      </p>
+      </h2>
       <div className="p-5">
         {error && (
-          <p className="text-[13px] text-destructive">تعذر تحميل السجل: {error.message}</p>
+          <p className="text-sm text-destructive">تعذر تحميل السجل: {error.message}</p>
         )}
         {!error && (!logs || logs.length === 0) && (
-          <p className="py-4 text-[13px] text-muted-foreground">
+          <p className="py-4 text-sm text-muted-foreground">
             لا توجد تعديلات مسجلة بعد.
           </p>
         )}
@@ -75,7 +75,7 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
           {logs && logs.length > 0 && (
             <span
               aria-hidden
-              className="absolute inset-y-2 start-[7px] w-px bg-[var(--hairline)]"
+              className="absolute inset-y-2 start-2 w-px bg-[var(--hairline)]"
             />
           )}
 
@@ -94,40 +94,36 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
 
             return (
               <div key={log.id} className="relative flex gap-4 pb-5 last:pb-0">
-                <div
-                  className={`relative z-10 mt-0.5 flex size-[15px] shrink-0 items-center justify-center rounded-full ring-4 ring-[var(--card)] ${
-                    isInsert ? "bg-chart-3/15" : "bg-chart-4/15"
-                  }`}
-                >
-                  {isInsert ? (
-                    <PlusCircle className="size-3 text-chart-3" />
-                  ) : (
-                    <Pencil className="size-[10px] text-chart-4" />
-                  )}
-                </div>
+                <span aria-hidden className="relative z-10 mt-2 flex w-4 shrink-0 justify-center">
+                  <span
+                    className={`size-2 rounded-full ring-4 ring-[var(--card)] ${
+                      isInsert ? "bg-chart-3" : "bg-chart-4"
+                    }`}
+                  />
+                </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13.5px] font-medium tracking-[-0.005em]">
+                  <p className="text-sm font-medium tracking-[-0.005em]">
                     {isInsert ? "تم إنشاء الحجز" : "تم تعديل الحجز"}
                     <span className="ms-1.5 font-normal text-muted-foreground">
                       بواسطة {actor}
                     </span>
                   </p>
-                  <p className="mt-0.5 text-[11.5px] tabular-nums text-muted-foreground/80">
+                  <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
                     {new Date(log.timestamp).toLocaleString("ar-EG")}
                   </p>
 
                   {changes.length > 0 && (
                     <ul className="mt-2 flex flex-col gap-1 rounded-lg border border-[var(--hairline)] bg-muted/40 px-3 py-2">
                       {changes.map((c) => (
-                        <li key={c.field} className="text-[12px]">
+                        <li key={c.field} className="text-xs">
                           <span className="text-muted-foreground">
                             {FIELD_LABELS[c.field] ?? c.field}:{" "}
                           </span>
-                          <span className="text-muted-foreground/70 line-through">
+                          <span className="text-muted-foreground line-through">
                             {formatValue(c.from)}
                           </span>
-                          <span className="mx-1.5 text-muted-foreground/50">←</span>
+                          <span aria-hidden className="mx-1.5 text-muted-foreground">←</span>
                           <span className="font-medium">{formatValue(c.to)}</span>
                         </li>
                       ))}

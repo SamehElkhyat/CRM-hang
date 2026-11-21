@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpLeft, Building2, Mail, Phone, Plus } from "lucide-react";
+import { Building2, Mail, Phone, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/layout/page-header";
@@ -18,12 +18,11 @@ export default async function HotelsPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        eyebrow="الدليل"
         title="دليل الفنادق"
         description="بيانات التواصل والسياسات الخاصة بكل فندق"
         actions={
           isAdmin && (
-            <Button className="glow-primary-hover" render={<Link href="/hotels/new" />}>
+            <Button render={<Link href="/hotels/new" />}>
               <Plus />
               إضافة فندق
             </Button>
@@ -32,75 +31,59 @@ export default async function HotelsPage() {
       />
 
       {error && (
-        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">
+        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           تعذر تحميل الفنادق: {error.message}
         </p>
       )}
 
       {hotels && hotels.length === 0 && (
         <div className="glass-panel flex flex-col items-center gap-3 px-6 py-20 text-center">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-muted/60">
-            <Building2 className="size-5 text-muted-foreground" />
-          </div>
-          <p className="text-[13.5px] text-muted-foreground">لا توجد فنادق مسجلة بعد.</p>
+          <Building2 className="size-6 text-muted-foreground" aria-hidden />
+          <p className="text-sm text-muted-foreground">لا توجد فنادق مسجلة بعد.</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {hotels?.map((hotel, i) => (
+        {hotels?.map((hotel) => (
           <Link
             key={hotel.id}
             href={`/hotels/${hotel.id}`}
-            className="stat-tile animate-fade-in-up group flex flex-col gap-5 p-5"
-            style={{ animationDelay: `${i * 55}ms` }}
+            className="glass-panel panel-link flex flex-col gap-4 p-5 focus-visible:outline-2 focus-visible:outline-ring"
           >
-            <div className="stat-tile-blob bg-chart-2" aria-hidden />
-
-            <div className="relative z-10 flex items-start justify-between gap-3">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-foreground/8 transition-transform duration-500 group-hover:scale-105">
-                <Building2 className="size-[18px]" />
-              </div>
-              <div className="flex items-center gap-2">
-                {!hotel.is_active && (
-                  <Badge variant="outline" className="text-muted-foreground">
-                    غير نشط
-                  </Badge>
-                )}
-                <ArrowUpLeft className="size-4 text-muted-foreground opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-              </div>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="text-base font-semibold tracking-[-0.015em]">{hotel.name}</h2>
+              {!hotel.is_active && (
+                <Badge variant="outline" className="text-muted-foreground">
+                  غير نشط
+                </Badge>
+              )}
             </div>
 
-            <div className="relative z-10">
-              <p className="text-[15px] font-semibold tracking-[-0.015em]">
-                {hotel.name}
-              </p>
-
-              <div className="mt-3 flex flex-col gap-1.5">
+            <div className="flex flex-col gap-2">
                 {hotel.hotline && (
-                  <span className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                    <Phone className="size-3.5 shrink-0 opacity-60" />
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Phone className="size-4 shrink-0" aria-hidden />
                     <span dir="ltr" className="truncate">
                       {hotel.hotline}
                     </span>
                   </span>
                 )}
                 {hotel.reservation_email && (
-                  <span className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                    <Mail className="size-3.5 shrink-0 opacity-60" />
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="size-4 shrink-0" aria-hidden />
                     <span dir="ltr" className="truncate">
                       {hotel.reservation_email}
                     </span>
                   </span>
                 )}
                 {hotel.sales_email && (
-                  <span className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                    <Mail className="size-3.5 shrink-0 opacity-60" />
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="size-4 shrink-0" aria-hidden />
                     <span dir="ltr" className="truncate">
                       {hotel.sales_email}
                     </span>
                   </span>
                 )}
-              </div>
             </div>
           </Link>
         ))}

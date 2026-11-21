@@ -60,36 +60,35 @@ export default async function BookingsPage({
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        eyebrow="السجل"
         title="الحجوزات"
         description="جميع الحجوزات المسجلة في النظام"
         actions={
           <>
-            {/* segmented control — one recessed track, active pill lifts out */}
-            <div className="flex items-center gap-1 rounded-xl border border-[var(--hairline)] bg-muted/40 p-1">
+            <nav aria-label="تصفية الحجوزات" className="flex items-center gap-1 rounded-lg border border-[var(--hairline)] bg-muted/40 p-1">
               {tabs.map((tab) => {
                 const isActive = filter === tab.key;
                 return (
                   <Link
                     key={tab.key}
                     href={tab.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+                      "rounded-md border px-3 py-1 text-sm font-medium transition-colors duration-150 ease-out",
                       isActive
-                        ? "bg-card text-foreground shadow-[0_1px_3px_rgb(0_0_0_/_0.2)]"
-                        : "text-muted-foreground hover:text-foreground",
+                        ? "border-[var(--hairline)] bg-card text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {tab.label}
                   </Link>
                 );
               })}
-            </div>
+            </nav>
             <Button variant="outline" render={<Link href="/bookings/quick" />}>
               <Zap />
               حجز سريع
             </Button>
-            <Button className="glow-primary-hover" render={<Link href="/bookings/new" />}>
+            <Button  render={<Link href="/bookings/new" />}>
               <Plus />
               إضافة حجز
             </Button>
@@ -98,17 +97,15 @@ export default async function BookingsPage({
       />
 
       {error && (
-        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">
+        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           تعذر تحميل الحجوزات: {error.message}
         </p>
       )}
 
       {rows.length === 0 && !error && (
         <div className="glass-panel flex flex-col items-center gap-3 px-6 py-20 text-center">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-muted/60">
-            <CalendarCheck className="size-5 text-muted-foreground" />
-          </div>
-          <p className="text-[13.5px] text-muted-foreground">
+          <CalendarCheck className="size-6 text-muted-foreground" aria-hidden />
+          <p className="text-sm text-muted-foreground">
             {filter === "following" ? (
               "لا توجد حجوزات ضمن متابعاتك بعد."
             ) : (

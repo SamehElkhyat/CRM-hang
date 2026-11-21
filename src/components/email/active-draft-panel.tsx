@@ -58,7 +58,7 @@ export function ActiveDraftPanel({
 
   async function handleSend() {
     if (!subject.trim() || !body.trim()) {
-      toast.error("الرسالة فارغة — أضف عنواناً ونصاً قبل الإرسال");
+      toast.error("الرسالة فارغة. أضف عنواناً ونصاً قبل الإرسال.");
       return;
     }
     if (dirty) {
@@ -116,7 +116,7 @@ export function ActiveDraftPanel({
               onClick={handleSend}
               disabled={isSending || !reservationEmailConfigured}
               size="sm"
-              className="glow-primary-hover ms-auto"
+              className="ms-auto"
             >
               {isSending ? <Loader2 className="animate-spin" /> : <Send />}
               إرسال البريد

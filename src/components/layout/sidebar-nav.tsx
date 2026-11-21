@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { navPillSpring } from "@/lib/motion";
 import { NAV_ITEMS } from "./nav-items";
 
 export function SidebarNav({
@@ -18,9 +16,7 @@ export function SidebarNav({
   const visibleItems = NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin);
 
   return (
-    <nav className="flex flex-col gap-0.5 px-3 py-5">
-      <p className="eyebrow px-3 pb-3">التنقل</p>
-
+    <nav aria-label="التنقل الرئيسي" className="flex flex-col gap-1 px-3 py-5">
       {visibleItems.map((item) => {
         const isActive =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -31,39 +27,16 @@ export function SidebarNav({
             key={item.href}
             href={item.href}
             onClick={onNavigate}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
-              "group/nav relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-300",
+              "relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-ring",
               isActive
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground",
+                ? "bg-accent text-foreground before:absolute before:inset-y-2 before:start-0 before:w-0.5 before:rounded-full before:bg-foreground"
+                : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
             )}
           >
-            {isActive && (
-              <motion.span
-                layoutId="active-nav-pill"
-                transition={navPillSpring}
-                className="absolute inset-0 rounded-lg border border-[var(--hairline)] bg-accent/70"
-              />
-            )}
-            {/* leading accent bar — reads as a deliberate marker, not a filled chip */}
-            {isActive && (
-              <motion.span
-                layoutId="active-nav-bar"
-                transition={navPillSpring}
-                className="absolute inset-y-1.5 start-0 w-[2px] rounded-full bg-foreground"
-              />
-            )}
-            {!isActive && (
-              <span className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover/nav:bg-accent/40 group-hover/nav:opacity-100" />
-            )}
-
-            <Icon
-              className={cn(
-                "relative z-10 size-[17px] shrink-0 transition-transform duration-300 group-hover/nav:scale-105",
-                isActive ? "opacity-100" : "opacity-70",
-              )}
-            />
-            <span className="relative z-10">{item.label}</span>
+            <Icon className="size-4 shrink-0" aria-hidden />
+            {item.label}
           </Link>
         );
       })}

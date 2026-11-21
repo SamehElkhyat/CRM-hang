@@ -17,7 +17,7 @@ export function LoginForm({ next }: { next: string }) {
       <input type="hidden" name="next" value={next} />
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="email" className="text-[12.5px] text-muted-foreground">
+        <Label htmlFor="email" className="text-xs text-muted-foreground">
           البريد الإلكتروني
         </Label>
         <Input
@@ -33,7 +33,7 @@ export function LoginForm({ next }: { next: string }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="password" className="text-[12.5px] text-muted-foreground">
+        <Label htmlFor="password" className="text-xs text-muted-foreground">
           كلمة المرور
         </Label>
         <Input
@@ -49,7 +49,7 @@ export function LoginForm({ next }: { next: string }) {
 
       {state.error && (
         <p
-          className="animate-fade-in rounded-lg border border-destructive/25 bg-destructive/10 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-destructive"
+          className="rounded-lg border border-destructive/25 bg-destructive/10 px-3.5 py-2.5 text-xs leading-relaxed text-destructive"
           role="alert"
         >
           {state.error}
@@ -60,7 +60,7 @@ export function LoginForm({ next }: { next: string }) {
         type="submit"
         disabled={isPending}
         size="lg"
-        className="glow-primary-hover mt-1 w-full"
+        className="mt-1 self-start px-6"
       >
         {isPending ? (
           <>
@@ -70,7 +70,7 @@ export function LoginForm({ next }: { next: string }) {
         ) : (
           <>
             تسجيل الدخول
-            <ArrowLeft className="transition-transform duration-300 group-hover/button:-translate-x-0.5" />
+            <ArrowLeft aria-hidden />
           </>
         )}
       </Button>

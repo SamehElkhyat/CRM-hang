@@ -30,7 +30,7 @@ export default async function HotelDetailPage({
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{hotel.name}</h1>
+            <h1 className="text-2xl font-semibold tracking-[-0.03em] lg:text-display">{hotel.name}</h1>
             <p className="text-sm text-muted-foreground">تعديل بيانات الفندق</p>
           </div>
           <form
@@ -61,7 +61,7 @@ export default async function HotelDetailPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-bold">{hotel.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] lg:text-display">{hotel.name}</h1>
         {!hotel.is_active && <Badge variant="outline">غير نشط</Badge>}
       </div>
 
@@ -72,19 +72,19 @@ export default async function HotelDetailPage({
         <CardContent className="flex flex-col gap-1 text-sm">
           <p>
             <span className="text-muted-foreground">الخط الساخن: </span>
-            {hotel.hotline || "—"}
+            {hotel.hotline || "غير متوفر"}
           </p>
           <p>
             <span className="text-muted-foreground">بريد الحجوزات: </span>
-            {hotel.reservation_email || "—"}
+            {hotel.reservation_email || "غير متوفر"}
           </p>
           <p>
             <span className="text-muted-foreground">بريد المبيعات: </span>
-            {hotel.sales_email || "—"}
+            {hotel.sales_email || "غير متوفر"}
           </p>
           <p>
             <span className="text-muted-foreground">بريد الحسابات: </span>
-            {hotel.finance_email || "—"}
+            {hotel.finance_email || "غير متوفر"}
           </p>
         </CardContent>
       </Card>

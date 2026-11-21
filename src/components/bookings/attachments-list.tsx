@@ -38,7 +38,7 @@ function AttachmentThumbnail({ filePath, fileType }: { filePath: string; fileTyp
 
   if (fileType.startsWith("image/")) {
     return (
-      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted/60">
+      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--hairline)]">
         {thumbUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumbUrl} alt="" className="size-full object-cover" />
@@ -50,8 +50,8 @@ function AttachmentThumbnail({ filePath, fileType }: { filePath: string; fileTyp
   }
 
   return (
-    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted/60">
-      <FileText className="size-4 text-muted-foreground" />
+    <div className="flex size-9 shrink-0 items-center justify-center">
+      <FileText className="size-5 text-muted-foreground" aria-hidden />
     </div>
   );
 }
@@ -81,7 +81,7 @@ export function AttachmentsList({
 
   if (attachments.length === 0) {
     return (
-      <p className="py-6 text-center text-[13px] text-muted-foreground">
+      <p className="py-6 text-center text-sm text-muted-foreground">
         لا توجد مرفقات بعد.
       </p>
     );
@@ -102,8 +102,8 @@ export function AttachmentsList({
               fileType={attachment.file_type}
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13.5px] font-medium">{attachment.file_name}</p>
-              <p className="mt-0.5 truncate text-[11.5px] text-muted-foreground">
+              <p className="truncate text-sm font-medium">{attachment.file_name}</p>
+              <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {formatFileSize(attachment.file_size)}
                 {attachment.uploader_name ? ` · ${attachment.uploader_name}` : ""} ·{" "}
                 {formatDistanceToNowStrict(new Date(attachment.created_at), {

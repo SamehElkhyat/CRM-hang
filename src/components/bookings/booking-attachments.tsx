@@ -16,8 +16,8 @@ export function BookingAttachments({
   const [items, setItems] = useState(attachments);
 
   return (
-    <div className="glass-panel animate-fade-in-up overflow-hidden" style={{ animationDelay: "300ms" }}>
-      <p className="eyebrow border-b border-[var(--hairline)] px-5 py-3.5">المرفقات</p>
+    <div className="glass-panel overflow-hidden">
+      <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">المرفقات</h2>
       <div className="flex flex-col gap-4 p-5">
         <AttachmentUploader
           bookingId={bookingId}

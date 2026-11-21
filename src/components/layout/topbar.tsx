@@ -20,7 +20,7 @@ export function Topbar({ user }: { user: CurrentUser }) {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--hairline)] bg-background/70 backdrop-blur-2xl">
+    <header className="sticky top-0 z-30 border-b border-[var(--hairline)] bg-background">
       <div className="flex h-16 items-center justify-between gap-3 px-4 lg:px-8">
         <div className="flex items-center gap-2 lg:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
@@ -32,9 +32,9 @@ export function Topbar({ user }: { user: CurrentUser }) {
             <SheetContent side="right" className="w-[264px] border-0 bg-sidebar p-0">
               <SheetHeader className="flex-row items-center gap-3 space-y-0 px-6 py-6">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                  <CalendarCheck className="size-[18px]" />
+                  <CalendarCheck className="size-5" aria-hidden />
                 </div>
-                <SheetTitle className="text-[15px] tracking-tight">
+                <SheetTitle className="text-base tracking-tight">
                   الحجوزات والعمليات
                 </SheetTitle>
               </SheetHeader>

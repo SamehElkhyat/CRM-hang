@@ -1,10 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowUpLeft, Zap } from "lucide-react";
 import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
-import { staggerTight, fadeInUp } from "@/lib/motion";
 import type { BookingEntryType, BookingStatus } from "@/types/database.types";
 
 export interface BookingRow {
@@ -21,7 +17,7 @@ export interface BookingRow {
 export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
   return (
     <div className="glass-panel overflow-hidden">
-      {/* Column rail — hidden on small screens where rows become stacked cards */}
+      {/* Column headings; on small screens each row stacks instead. */}
       <div className="hidden grid-cols-[1.4fr_1.2fr_0.9fr_0.9fr_0.8fr_auto] gap-4 border-b border-[var(--hairline)] px-6 py-3.5 lg:grid">
         {["الضيف", "الفندق", "الوصول", "المغادرة", "التكلفة", "الحالة"].map((h) => (
           <span key={h} className="eyebrow">
@@ -30,43 +26,41 @@ export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
         ))}
       </div>
 
-      <motion.ul variants={staggerTight} initial="hidden" animate="show">
+      <ul>
         {bookings.map((booking) => (
-          <motion.li key={booking.id} variants={fadeInUp}>
+          <li key={booking.id}>
             <Link
               href={`/bookings/${booking.id}`}
               className="row-interactive group grid grid-cols-1 gap-x-4 gap-y-2 border-b border-[var(--hairline)] px-6 py-4 last:border-0 lg:grid-cols-[1.4fr_1.2fr_0.9fr_0.9fr_0.8fr_auto] lg:items-center"
             >
               <div className="flex items-center gap-2.5">
                 {booking.entry_type === "quick" && (
-                  <span
-                    className="flex size-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
-                    title="حجز سريع"
-                  >
-                    <Zap className="size-3" />
+                  <span className="shrink-0 text-primary" title="حجز سريع">
+                    <Zap className="size-4" aria-hidden />
+                    <span className="sr-only">حجز سريع</span>
                   </span>
                 )}
-                <span className="text-[14px] font-medium tracking-[-0.01em]">
+                <span className="text-sm font-medium tracking-[-0.01em]">
                   {booking.guest_name}
                 </span>
-                <ArrowUpLeft className="size-3.5 text-muted-foreground opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                <ArrowUpLeft className="size-4 text-muted-foreground opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100" aria-hidden />
               </div>
 
-              <span className="text-[13px] text-muted-foreground">
-                {booking.hotel_name ?? "—"}
+              <span className="text-sm text-muted-foreground">
+                {booking.hotel_name ?? "فندق غير محدد"}
               </span>
 
-              <span className="text-[13px] tabular-nums text-muted-foreground">
+              <span className="text-sm tabular-nums text-muted-foreground">
                 <span className="lg:hidden">الوصول: </span>
                 {booking.check_in}
               </span>
 
-              <span className="text-[13px] tabular-nums text-muted-foreground">
+              <span className="text-sm tabular-nums text-muted-foreground">
                 <span className="lg:hidden">المغادرة: </span>
                 {booking.check_out}
               </span>
 
-              <span className="text-[13px] font-medium tabular-nums">
+              <span className="text-sm font-medium tabular-nums">
                 {booking.total_cost.toLocaleString()}
               </span>
 
@@ -74,9 +68,9 @@ export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
                 <BookingStatusBadge status={booking.status} />
               </span>
             </Link>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
     </div>
   );
 }

@@ -85,7 +85,7 @@ export function QuickBookingForm() {
       <Button
         onClick={handleSave}
         disabled={isSaving}
-        className="glow-primary-hover self-start"
+        className="self-start"
         size="lg"
       >
         {isSaving ? <Loader2 className="animate-spin" /> : <Save />}

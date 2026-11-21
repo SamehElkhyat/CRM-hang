@@ -64,7 +64,7 @@ export function EmailStudioWorkspace({
           <Button
             onClick={handleNewDraft}
             disabled={isCreatingDraft}
-            className="glow-primary-hover"
+            
             size="sm"
           >
             {isCreatingDraft ? <Loader2 className="animate-spin" /> : <PenLine />}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Save, ShieldCheck } from "lucide-react";
+import { Check, Loader2, Save, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingFormFields } from "@/components/bookings/booking-form-fields";
@@ -53,7 +53,10 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
           التحقق من التكرار
         </Button>
         {duplicateChecked && duplicates.length === 0 && (
-          <span className="text-sm text-chart-3">لا توجد حجوزات مشابهة ✓</span>
+          <span className="flex items-center gap-1 text-sm text-chart-3">
+            <Check className="size-4" aria-hidden />
+            لا توجد حجوزات مشابهة
+          </span>
         )}
       </div>
 
@@ -73,7 +76,7 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
       <Button
         onClick={handleSave}
         disabled={isSaving}
-        className="glow-primary-hover self-start"
+        className="self-start"
         size="lg"
       >
         {isSaving ? <Loader2 className="animate-spin" /> : <Save />}

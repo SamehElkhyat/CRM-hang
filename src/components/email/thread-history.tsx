@@ -34,7 +34,7 @@ export function ThreadHistory({
             type="button"
             onClick={() => onSelect(d.id)}
             className={cn(
-              "group/draft relative flex flex-col gap-1 rounded-lg border px-3 py-2.5 text-start transition-all duration-300",
+              "group/draft relative flex flex-col gap-1 rounded-lg border px-3 py-2.5 text-start transition-colors duration-150 ease-out",
               isActive
                 ? "border-[var(--hairline-strong)] bg-accent/70"
                 : "border-transparent hover:border-[var(--hairline)] hover:bg-accent/40",
@@ -49,11 +49,11 @@ export function ThreadHistory({
               ) : (
                 <FileText className="size-3.5 shrink-0 text-muted-foreground" />
               )}
-              <span className="truncate text-[13px] font-medium">
+              <span className="truncate text-sm font-medium">
                 {d.subject || "(بدون عنوان)"}
               </span>
             </div>
-            <span className="ps-5 text-[11px] text-muted-foreground">
+            <span className="ps-5 text-xs text-muted-foreground">
               {STATUS_LABEL[d.status]}
             </span>
           </button>

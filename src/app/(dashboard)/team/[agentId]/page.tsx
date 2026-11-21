@@ -29,7 +29,7 @@ export default async function AgentHotelsPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="animate-fade-in-up flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+      <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div className="min-w-0">
           <Link
             href="/team"
@@ -38,29 +38,27 @@ export default async function AgentHotelsPage({
             <ArrowRight className="size-3" />
             الفريق
           </Link>
-          <h1 className="mt-2 truncate text-[1.75rem] font-semibold tracking-[-0.03em] lg:text-[2.125rem]">
-            {agent.full_name || "—"}
+          <h1 className="mt-2 truncate text-2xl font-semibold tracking-[-0.03em] lg:text-display">
+            {agent.full_name || "بدون اسم"}
           </h1>
-          <p className="mt-1.5 text-[13.5px] text-muted-foreground">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             <span className="tabular-nums">{totalBookings}</span> حجز إجمالاً عبر{" "}
-            <span className="tabular-nums">{(hotels ?? []).length}</span> فندق — اضغط على أي
+            <span className="tabular-nums">{(hotels ?? []).length}</span> فندق. اضغط على أي
             فندق لعرض تفاصيل الحجوزات
           </p>
         </div>
       </header>
 
       {error && (
-        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">
+        <p className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           تعذر تحميل الفنادق: {error.message}
         </p>
       )}
 
       {hotels && hotels.length === 0 && !error && (
         <div className="glass-panel flex flex-col items-center gap-3 px-6 py-20 text-center">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-muted/60">
-            <Building2 className="size-5 text-muted-foreground" />
-          </div>
-          <p className="text-[13.5px] text-muted-foreground">
+          <Building2 className="size-6 text-muted-foreground" aria-hidden />
+          <p className="text-sm text-muted-foreground">
             لم يقم هذا العضو بإضافة أي حجوزات بعد.
           </p>
         </div>
@@ -74,24 +72,21 @@ export default async function AgentHotelsPage({
           </div>
 
           <ul>
-            {hotels.map((hotel, i) => (
+            {hotels.map((hotel) => (
               <li key={hotel.hotel_id}>
                 <Link
                   href={`/team/${agentId}/${hotel.hotel_id}`}
-                  className="row-interactive animate-fade-in-up group grid grid-cols-1 gap-x-4 gap-y-2 border-b border-[var(--hairline)] px-6 py-4 last:border-0 lg:grid-cols-[1.6fr_auto] lg:items-center"
-                  style={{ animationDelay: `${i * 40}ms` }}
+                  className="row-interactive group grid grid-cols-1 gap-x-4 gap-y-2 border-b border-[var(--hairline)] px-6 py-4 last:border-0 lg:grid-cols-[1.6fr_auto] lg:items-center"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-chart-2/10">
-                      <Building2 className="size-3.5 text-chart-2" />
-                    </div>
-                    <span className="truncate text-[14px] font-medium tracking-[-0.01em]">
+                    <Building2 className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                    <span className="truncate text-sm font-medium tracking-[-0.01em]">
                       {hotel.hotel_name}
                     </span>
-                    <ArrowUpLeft className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                    <ArrowUpLeft className="size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100" aria-hidden />
                   </div>
 
-                  <span className="justify-self-start text-[15px] font-semibold tabular-nums lg:justify-self-end">
+                  <span className="justify-self-start text-base font-semibold tabular-nums lg:justify-self-end">
                     {hotel.booking_count.toLocaleString()}
                   </span>
                 </Link>

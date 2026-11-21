@@ -85,7 +85,7 @@ export function BookingFormFields({
                         onChange({ roomCategory: rt.name, rate: String(rt.base_rate) })
                       }
                     >
-                      {rt.name} — {rt.base_rate}
+                      {rt.name}: {rt.base_rate}
                     </Badge>
                   ),
                 )}

@@ -105,11 +105,11 @@ export function CommentThread({
   }
 
   return (
-    <div className="glass-panel animate-fade-in-up flex h-[34rem] flex-col overflow-hidden">
+    <div className="glass-panel flex h-[34rem] flex-col overflow-hidden">
       <div className="flex items-center justify-between border-b border-[var(--hairline)] px-5 py-3.5">
-        <p className="eyebrow">المحادثة</p>
-        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <span className="size-1.5 animate-pulse rounded-full bg-chart-3" />
+        <h2 className="text-sm font-semibold">المحادثة</h2>
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className="size-2 rounded-full bg-chart-3" aria-hidden />
           مباشر
         </span>
       </div>
@@ -117,7 +117,7 @@ export function CommentThread({
       <ScrollArea className="flex-1 px-5 py-4">
         <div className="flex flex-col gap-4">
           {comments.length === 0 && (
-            <p className="py-12 text-center text-[13px] leading-relaxed text-muted-foreground">
+            <p className="py-12 text-sm leading-relaxed text-muted-foreground">
               لا توجد رسائل بعد.
               <br />
               ابدأ المحادثة مع الفريق حول هذا الحجز.
@@ -129,7 +129,7 @@ export function CommentThread({
               return (
                 <div
                   key={c.id}
-                  className="flex items-center gap-3 py-0.5 text-[11px] text-muted-foreground"
+                  className="flex items-center gap-3 py-0.5 text-xs text-muted-foreground"
                 >
                   <span className="h-px flex-1 bg-[var(--hairline)]" />
                   <span className="whitespace-nowrap rounded-full border border-[var(--hairline)] bg-muted/50 px-2.5 py-0.5">
@@ -145,16 +145,16 @@ export function CommentThread({
               <div
                 key={c.id}
                 className={cn(
-                  "animate-fade-in-up flex flex-col gap-1",
+                  " flex flex-col gap-1",
                   isMine ? "items-end" : "items-start",
                 )}
               >
-                <span className="px-1 text-[11px] font-medium text-muted-foreground">
+                <span className="px-1 text-xs font-medium text-muted-foreground">
                   {isMine ? "أنت" : (c.author_name ?? "عضو الفريق")}
                 </span>
                 <div
                   className={cn(
-                    "max-w-[86%] whitespace-pre-wrap px-3.5 py-2.5 text-[13.5px] leading-relaxed",
+                    "max-w-[86%] whitespace-pre-wrap px-3.5 py-2.5 text-sm leading-relaxed",
                     isMine
                       ? "rounded-[16px_16px_4px_16px] bg-primary text-primary-foreground"
                       : "rounded-[16px_16px_16px_4px] border border-[var(--hairline)] bg-muted/60",
@@ -162,7 +162,7 @@ export function CommentThread({
                 >
                   {c.message}
                 </div>
-                <span className="px-1 text-[10px] tabular-nums text-muted-foreground/70">
+                <span className="px-1 text-xs tabular-nums text-muted-foreground">
                   {format(new Date(c.created_at), "HH:mm")}
                 </span>
               </div>
