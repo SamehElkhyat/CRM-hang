@@ -54,7 +54,11 @@ function NewBookingsCount({ count }: { count: number }) {
 export function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
     <article className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-[var(--hairline)] bg-card">
-      <header className="flex items-start gap-3 border-b border-[var(--hairline)] p-4">
+      <Link
+        href={`/team/${member.id}/bookings`}
+        title={`عرض كل حجوزات ${member.full_name || "هذا العضو"}`}
+        className="group flex items-start gap-3 border-b border-[var(--hairline)] p-4 transition-colors duration-150 ease-out hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+      >
         <span
           className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold"
           aria-hidden
@@ -64,7 +68,9 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
 
         <div className="min-w-0 flex-1">
           <h3 className="flex items-center gap-1 text-base font-semibold tracking-[-0.014em]">
-            <span className="truncate">{member.full_name || "بدون اسم"}</span>
+            <span className="truncate underline-offset-4 group-hover:underline">
+              {member.full_name || "بدون اسم"}
+            </span>
             {member.role === "admin" && (
               <>
                 <ShieldCheck className="size-4 shrink-0 text-muted-foreground" aria-hidden />
@@ -81,7 +87,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
         </div>
 
         <NewBookingsCount count={member.new_bookings} />
-      </header>
+      </Link>
 
       {member.bookings.length === 0 ? (
         <p className="px-4 py-8 text-sm text-muted-foreground">لا توجد حجوزات لهذا العضو بعد.</p>
