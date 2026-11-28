@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Plus } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "./nav-items";
 
@@ -17,9 +19,19 @@ export function SidebarNav({
 
   return (
     <nav aria-label="التنقل الرئيسي" className="flex flex-col gap-1 px-3 py-5">
+      <Link
+        href="/bookings/new"
+        onClick={onNavigate}
+        className={cn(buttonVariants({ size: "lg" }), "mb-3")}
+      >
+        <Plus aria-hidden />
+        حجز جديد
+      </Link>
+
       {visibleItems.map((item) => {
         const isActive =
-          item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          pathname === item.href ||
+          (item.href !== "/" && pathname.startsWith(`${item.href}/`));
         const Icon = item.icon;
 
         return (

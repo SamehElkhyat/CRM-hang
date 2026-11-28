@@ -16,10 +16,10 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: "/", label: "لوحة التحكم", icon: LayoutDashboard },
+  { href: "/", label: "الرئيسية", icon: LayoutDashboard },
   { href: "/bookings", label: "الحجوزات", icon: CalendarCheck },
-  { href: "/hotels", label: "دليل الفنادق", icon: Building2 },
+  { href: "/hotels", label: "الفنادق", icon: Building2 },
   { href: "/team", label: "الفريق", icon: Users, adminOnly: true },
-  { href: "/team-bookings", label: "حجوزات الفريق", icon: History },
+  { href: "/team-bookings", label: "حجوزات آخر 24 ساعة", icon: History },
   { href: "/settings", label: "الإعدادات", icon: Settings },
 ];

@@ -43,14 +43,21 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
     save(rawText);
   }
 
+  const missing = [
+    !draft.hotelId && "الفندق",
+    !draft.guestName.trim() && "اسم الضيف",
+    !draft.checkIn && "تاريخ الوصول",
+    !draft.checkOut && "تاريخ المغادرة",
+  ].filter(Boolean);
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-4">
       <BookingFormFields hotels={hotels} draft={draft} onChange={updateDraft} />
 
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="outline" onClick={checkDuplicates} disabled={isCheckingDuplicates}>
           {isCheckingDuplicates ? <Loader2 className="animate-spin" /> : <ShieldCheck />}
-          التحقق من التكرار
+          التأكد إن الحجز مش مكرر
         </Button>
         {duplicateChecked && duplicates.length === 0 && (
           <span className="flex items-center gap-1 text-sm text-chart-3">
@@ -73,15 +80,15 @@ export function ManualBookingForm({ hotels }: { hotels: Hotel[] }) {
         </Card>
       )}
 
-      <Button
-        onClick={handleSave}
-        disabled={isSaving}
-        className="self-start"
-        size="lg"
-      >
-        {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
-        {isSaving ? "جاري الحفظ..." : "حفظ الحجز"}
-      </Button>
+      <div className="sticky bottom-0 z-20 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--hairline)] bg-background py-4">
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
+          {isSaving ? "جاري الحفظ..." : "حفظ الحجز"}
+        </Button>
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {missing.length > 0 ? `باقي: ${missing.join("، ")}` : "البيانات المطلوبة مكتملة."}
+        </p>
+      </div>
     </div>
   );
 }

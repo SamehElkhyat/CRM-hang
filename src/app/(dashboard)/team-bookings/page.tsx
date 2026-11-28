@@ -11,7 +11,7 @@ export default async function TeamBookingsPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        title="حجوزات الفريق"
+        title="حجوزات آخر 24 ساعة"
         description="عدد الحجوزات التي أضافها كل عضو خلال آخر 24 ساعة. اضغط على أي عضو لعرض حجوزاته"
         actions={
           <span className="flex items-center gap-1.5 rounded-full border border-[var(--hairline)] bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground">

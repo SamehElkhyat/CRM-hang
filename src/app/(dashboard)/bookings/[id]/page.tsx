@@ -113,9 +113,9 @@ export default async function BookingDetailPage({
   ];
 
   const contactRows = [
-    { icon: Phone, value: hotel?.hotline || "غير متوفر", tag: "الخط الساخن" },
-    { icon: Mail, value: hotel?.reservation_email || "غير متوفر", tag: "حجوزات" },
-    { icon: Mail, value: hotel?.sales_email || "غير متوفر", tag: "مبيعات" },
+    { icon: Phone, value: hotel?.hotline, scheme: "tel", tag: "الخط الساخن" },
+    { icon: Mail, value: hotel?.reservation_email, scheme: "mailto", tag: "حجوزات" },
+    { icon: Mail, value: hotel?.sales_email, scheme: "mailto", tag: "مبيعات" },
   ];
 
   const isQuick = booking.entry_type === "quick";
@@ -178,6 +178,7 @@ export default async function BookingDetailPage({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <FollowToggle bookingId={booking.id} initialFollowing={Boolean(followRow)} />
+          <span className="text-sm text-muted-foreground">الحالة:</span>
           {currentUser?.profile?.role === "admin" ? (
             <BookingStatusSelect bookingId={booking.id} status={booking.status} />
           ) : (
@@ -187,7 +188,7 @@ export default async function BookingDetailPage({
             render={<Link href={`/bookings/${booking.id}/email`} />}
           >
             <Mail />
-            استوديو البريد
+            إرسال بريد للفندق
             {draftCount ? <Badge variant="secondary">{draftCount}</Badge> : null}
           </Button>
         </div>
@@ -234,9 +235,19 @@ export default async function BookingDetailPage({
                         className="flex items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
                       >
                         <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                        <span dir="ltr" className="min-w-0 flex-1 truncate text-start text-sm">
-                          {row.value}
-                        </span>
+                        {row.value ? (
+                          <a
+                            href={`${row.scheme}:${row.value}`}
+                            dir="ltr"
+                            className="min-w-0 flex-1 truncate text-start text-sm underline-offset-4 hover:underline"
+                          >
+                            {row.value}
+                          </a>
+                        ) : (
+                          <span className="min-w-0 flex-1 text-sm text-muted-foreground">
+                            غير متوفر
+                          </span>
+                        )}
                         <span className="shrink-0 text-xs text-muted-foreground">
                           {row.tag}
                         </span>

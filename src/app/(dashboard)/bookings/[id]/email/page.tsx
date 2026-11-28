@@ -42,7 +42,7 @@ export default async function EmailStudioPage({
           العودة لتفاصيل الحجز
         </Link>
         <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em] lg:text-display">
-          استوديو البريد
+          إرسال بريد للفندق
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {booking.guest_name} · {hotel?.name ?? "فندق غير محدد"}

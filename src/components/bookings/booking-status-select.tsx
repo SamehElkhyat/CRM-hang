@@ -41,8 +41,8 @@ export function BookingStatusSelect({
   }
 
   return (
-    <Select value={value} onValueChange={handleChange} disabled={isPending}>
-      <SelectTrigger className="w-40">
+    <Select items={OPTIONS} value={value} onValueChange={handleChange} disabled={isPending}>
+      <SelectTrigger className="w-40" aria-label="حالة الحجز">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

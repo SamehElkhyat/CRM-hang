@@ -55,60 +55,73 @@ export function EmailStudioWorkspace({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
-      <Card className="glass-panel h-fit">
-        <CardHeader>
-          <CardTitle>سجل المراسلات</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <Button
-            onClick={handleNewDraft}
-            disabled={isCreatingDraft}
-            
-            size="sm"
-          >
-            {isCreatingDraft ? <Loader2 className="animate-spin" /> : <PenLine />}
-            {isCreatingDraft ? "جاري الإنشاء..." : "مسودة جديدة"}
-          </Button>
-          <Separator />
-          <ThreadHistory
-            drafts={drafts}
-            activeDraftId={activeDraftId}
-            onSelect={setActiveDraftId}
-          />
-        </CardContent>
-      </Card>
+    <div className="flex flex-col gap-4">
+      <ol className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+        {["اعمل مسودة جديدة", "اكتب الرسالة واحفظها", "أرسلها للفندق"].map((step, i) => (
+          <li key={step} className="flex items-center gap-2">
+            <span className="font-semibold tabular-nums text-primary">{i + 1}</span>
+            {step}
+          </li>
+        ))}
+      </ol>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+        <Card className="glass-panel h-fit">
+          <CardHeader>
+            <CardTitle>سجل المراسلات</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            <Button
+              onClick={handleNewDraft}
+              disabled={isCreatingDraft}
+              size="sm"
+            >
+              {isCreatingDraft ? <Loader2 className="animate-spin" /> : <PenLine />}
+              {isCreatingDraft ? "جاري الإنشاء..." : "مسودة جديدة"}
+            </Button>
+            <Separator />
+            <ThreadHistory
+              drafts={drafts}
+              activeDraftId={activeDraftId}
+              onSelect={setActiveDraftId}
+            />
+          </CardContent>
+        </Card>
 
-      <div className="flex flex-col gap-6">
-        {!reservationEmailConfigured && (
-          <Alert variant="destructive">
-            <AlertTriangle />
-            <AlertTitle>لا يوجد بريد حجوزات مسجل لهذا الفندق</AlertTitle>
-            <AlertDescription>
-              أضف بريد الحجوزات من دليل الفنادق قبل إرسال الرسالة.
-            </AlertDescription>
-          </Alert>
-        )}
+        <div className="flex flex-col gap-6">
+          {!reservationEmailConfigured && (
+            <Alert variant="destructive">
+              <AlertTriangle />
+              <AlertTitle>لا يوجد بريد حجوزات مسجل لهذا الفندق</AlertTitle>
+              <AlertDescription>
+                أضف بريد الحجوزات من دليل الفنادق قبل إرسال الرسالة.
+              </AlertDescription>
+            </Alert>
+          )}
 
-        {!activeDraft && (
-          <Card className="glass-panel">
-            <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                لا توجد مسودة نشطة حالياً. اضغط &quot;مسودة جديدة&quot; للبدء.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+          {!activeDraft && (
+            <Card className="glass-panel">
+              <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+                <p className="text-sm text-muted-foreground">
+                  مفيش رسالة مفتوحة دلوقتي.
+                </p>
+                <Button onClick={handleNewDraft} disabled={isCreatingDraft}>
+                  {isCreatingDraft ? <Loader2 className="animate-spin" /> : <PenLine />}
+                  اكتب رسالة جديدة
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-        {activeDraft && (
-          <ActiveDraftPanel
-            key={activeDraft.id}
-            draft={activeDraft}
-            bookingId={bookingId}
-            reservationEmailConfigured={reservationEmailConfigured}
-            onDraftUpdated={handleDraftUpdated}
-          />
-        )}
+          {activeDraft && (
+            <ActiveDraftPanel
+              key={activeDraft.id}
+              draft={activeDraft}
+              bookingId={bookingId}
+              reservationEmailConfigured={reservationEmailConfigured}
+              onDraftUpdated={handleDraftUpdated}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

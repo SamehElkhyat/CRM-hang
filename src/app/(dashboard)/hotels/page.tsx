@@ -18,7 +18,7 @@ export default async function HotelsPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        title="دليل الفنادق"
+        title="الفنادق"
         description="بيانات التواصل والسياسات الخاصة بكل فندق"
         actions={
           isAdmin && (

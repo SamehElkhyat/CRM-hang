@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { EntryModeSwitch } from "@/components/bookings/entry-mode-switch";
 import { PageHeader } from "@/components/layout/page-header";
 import { ManualBookingForm } from "@/components/bookings/manual-booking-form";
 import { createClient } from "@/lib/supabase/server";
@@ -17,15 +17,8 @@ export default async function NewBookingPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="إضافة حجز"
-        description="الفندق واسم الضيف مطلوبان فقط، وباقي الحقول اختيارية."
-        actions={
-          <Link
-            href="/bookings/quick"
-            className="text-sm text-primary underline underline-offset-4"
-          >
-            تفضل حجز سريع بدل ذلك؟
-          </Link>
-        }
+        description="املأ الحقول المعلّمة بنجمة، والباقي اختياري."
+        actions={<EntryModeSwitch active="detailed" />}
       />
 
       {error && (

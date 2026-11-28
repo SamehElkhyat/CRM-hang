@@ -7,10 +7,11 @@ import {
   Hotel,
   ListChecks,
   Plus,
+  Zap,
 } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { BookingStatusBadge } from "@/components/bookings/booking-status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TeamBoard } from "@/components/team/team-board";
@@ -73,13 +74,19 @@ export default async function DashboardHomePage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        title="لوحة التحكم"
-        description="حالة الحجوزات والعمليات اليوم."
+        title="الرئيسية"
+        description="اضغط على أي حجز لفتحه، أو ابدأ حجز جديد."
         actions={
-          <Button render={<Link href="/bookings/new" />}>
-            <Plus aria-hidden />
-            إضافة حجز جديد
-          </Button>
+          <>
+            <Link href="/bookings/quick" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              <Zap aria-hidden />
+              حجز سريع
+            </Link>
+            <Link href="/bookings/new" className={buttonVariants({ size: "lg" })}>
+              <Plus aria-hidden />
+              حجز جديد
+            </Link>
+          </>
         }
       />
 

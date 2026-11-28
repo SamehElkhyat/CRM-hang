@@ -121,6 +121,11 @@ export function ActiveDraftPanel({
               {isSending ? <Loader2 className="animate-spin" /> : <Send />}
               إرسال البريد
             </Button>
+            {dirty && (
+              <p className="w-full text-sm text-muted-foreground" aria-live="polite">
+                فيه تعديلات لسه متحفظتش. اضغط &quot;حفظ&quot; قبل الإرسال.
+              </p>
+            )}
           </div>
         )}
       </CardContent>

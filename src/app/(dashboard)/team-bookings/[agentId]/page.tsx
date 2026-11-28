@@ -46,7 +46,7 @@ export default async function AgentBookingsLast24hPage({
         <div className="min-w-0">
           <div className="eyebrow flex flex-wrap items-center gap-1.5">
             <Link href="/team-bookings" className="transition-colors hover:text-foreground">
-              حجوزات الفريق
+              حجوزات آخر 24 ساعة
             </Link>
             <ArrowRight className="size-3 rotate-180" />
             <span>{agent.full_name || "بدون اسم"}</span>

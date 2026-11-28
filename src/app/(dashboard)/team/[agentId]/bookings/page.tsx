@@ -75,7 +75,7 @@ export default async function MemberAllBookingsPage({
           className="eyebrow inline-flex w-fit items-center gap-1 transition-colors duration-150 ease-out hover:text-foreground"
         >
           <ArrowRight className="size-3" aria-hidden />
-          لوحة التحكم
+          الرئيسية
         </Link>
         <PageHeader
           title={name}

@@ -55,12 +55,13 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
     .order("timestamp", { ascending: false });
 
   return (
-    <div className="glass-panel overflow-hidden">
-      <h2 className="flex items-center gap-2 border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
+    <details className="glass-panel overflow-hidden">
+      <summary className="flex cursor-pointer items-center gap-2 px-5 py-3 text-sm font-semibold transition-colors duration-150 ease-out hover:bg-muted/50">
         <History className="size-4 text-muted-foreground" aria-hidden />
         سجل التعديلات
-      </h2>
-      <div className="p-5">
+        <span className="font-normal text-muted-foreground">(اضغط للعرض)</span>
+      </summary>
+      <div className="border-t border-[var(--hairline)] p-5">
         {error && (
           <p className="text-sm text-destructive">تعذر تحميل السجل: {error.message}</p>
         )}
@@ -135,6 +136,6 @@ export async function AuditLogTimeline({ bookingId }: { bookingId: string }) {
           })}
         </div>
       </div>
-    </div>
+    </details>
   );
 }
