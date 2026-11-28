@@ -15,6 +15,7 @@ export interface AttachmentWithUploader {
   file_type: string;
   file_size: number;
   created_at: string;
+  uploaded_by: string | null;
   uploader_name: string | null;
 }
 

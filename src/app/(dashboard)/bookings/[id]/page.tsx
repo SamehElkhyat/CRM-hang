@@ -63,7 +63,7 @@ export default async function BookingDetailPage({
         : Promise.resolve({ data: null }),
       supabase
         .from("booking_attachments")
-        .select("id, file_name, file_path, file_type, file_size, created_at, profiles(full_name)")
+        .select("id, file_name, file_path, file_type, file_size, created_at, uploaded_by, profiles(full_name)")
         .eq("booking_id", id)
         .order("created_at", { ascending: false }),
     ]);
@@ -86,6 +86,7 @@ export default async function BookingDetailPage({
     file_type: a.file_type,
     file_size: a.file_size,
     created_at: a.created_at,
+    uploaded_by: a.uploaded_by,
     uploader_name:
       (a.profiles as unknown as { full_name: string | null } | null)?.full_name ?? null,
   }));

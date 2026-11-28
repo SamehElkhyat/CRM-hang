@@ -153,29 +153,36 @@ export function CommentThread({
             let item: React.ReactNode;
 
             if (file) {
+              const isMine = file.uploaded_by === currentUserId;
+              const subtle = isMine ? "text-primary-foreground" : "text-muted-foreground";
               const Icon = file.file_type.startsWith("image/") ? ImageIcon : FileText;
               item = (
-                <div className="flex flex-col items-start gap-1">
+                <div className={cn("flex flex-col gap-1", isMine ? "items-end" : "items-start")}>
                   <span className="px-1 text-xs font-medium text-muted-foreground">
-                    {file.uploader_name ?? "عضو الفريق"} رفع ملف
+                    {isMine ? "أنت رفعت ملف" : `${file.uploader_name ?? "عضو الفريق"} رفع ملف`}
                   </span>
                   <button
                     type="button"
                     onClick={() => openAttachment(file)}
                     disabled={openingId === file.id}
                     title={`فتح ${file.file_name}`}
-                    className="flex w-full max-w-[86%] items-center gap-3 rounded-lg border border-[var(--hairline-strong)] px-3 py-2 text-start transition-colors duration-150 ease-out hover:bg-accent/60 focus-visible:outline-2 focus-visible:outline-ring"
+                    className={cn(
+                      "flex w-full max-w-[86%] items-center gap-3 px-3.5 py-2.5 text-start transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                      isMine
+                        ? "rounded-[16px_16px_4px_16px] bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "rounded-[16px_16px_16px_4px] border border-[var(--hairline)] bg-muted/60 hover:bg-muted",
+                    )}
                   >
                     {openingId === file.id ? (
-                      <Loader2 className="size-5 shrink-0 animate-spin text-muted-foreground" />
+                      <Loader2 className={cn("size-5 shrink-0 animate-spin", subtle)} />
                     ) : (
-                      <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+                      <Icon className={cn("size-5 shrink-0", subtle)} aria-hidden />
                     )}
                     <span className="min-w-0 flex-1">
                       <span dir="auto" className="block truncate text-sm font-medium">
                         {file.file_name}
                       </span>
-                      <span className="block text-xs text-muted-foreground">
+                      <span className={cn("block text-xs", subtle)}>
                         {formatFileSize(file.file_size)} · اضغط للفتح
                       </span>
                     </span>

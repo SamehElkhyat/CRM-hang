@@ -72,6 +72,7 @@ export function BookingFilesProvider({
             file_type: row.file_type,
             file_size: row.file_size,
             created_at: row.created_at,
+            uploaded_by: row.uploaded_by,
             uploader_name: data?.full_name ?? null,
           });
         },
