@@ -10,6 +10,7 @@ import { AuditLogTimeline } from "@/components/bookings/audit-log-timeline";
 import { CommentThread, type CommentWithAuthor } from "@/components/bookings/comment-thread";
 import { FollowToggle } from "@/components/bookings/follow-toggle";
 import { BookingAttachments } from "@/components/bookings/booking-attachments";
+import { BookingFilesProvider } from "@/components/bookings/booking-files-context";
 import type { AttachmentWithUploader } from "@/components/bookings/attachments-list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/get-current-profile";
@@ -194,106 +195,107 @@ export default async function BookingDetailPage({
         </div>
       </header>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
-        <div className="flex flex-col gap-6">
-          {isQuick && contentCard}
+      <BookingFilesProvider key={booking.id} bookingId={booking.id} initialFiles={attachments}>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+          <div className="flex flex-col gap-6">
+            {isQuick && contentCard}
 
-          {!isQuick && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="glass-panel overflow-hidden">
-                <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
-                  تفاصيل الحجز
-                </h2>
-                <dl className="flex flex-col">
-                  {detailRows.map((row) => (
-                    <div
-                      key={row.label}
-                      className="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
-                    >
-                      <dt className="text-xs text-muted-foreground">{row.label}</dt>
-                      <dd
-                        dir={row.ltr ? "ltr" : undefined}
-                        className="text-sm font-medium"
-                      >
-                        {row.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              <div className="glass-panel overflow-hidden">
-                <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
-                  التواصل مع الفندق
-                </h2>
-                <div className="flex flex-col">
-                  {contactRows.map((row, i) => {
-                    const Icon = row.icon;
-                    return (
+            {!isQuick && (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="glass-panel overflow-hidden">
+                  <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
+                    تفاصيل الحجز
+                  </h2>
+                  <dl className="flex flex-col">
+                    {detailRows.map((row) => (
                       <div
-                        key={i}
-                        className="flex items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
+                        key={row.label}
+                        className="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
                       >
-                        <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                        {row.value ? (
-                          <a
-                            href={`${row.scheme}:${row.value}`}
-                            dir="ltr"
-                            className="min-w-0 flex-1 truncate text-start text-sm underline-offset-4 hover:underline"
-                          >
-                            {row.value}
-                          </a>
-                        ) : (
-                          <span className="min-w-0 flex-1 text-sm text-muted-foreground">
-                            غير متوفر
-                          </span>
-                        )}
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {row.tag}
-                        </span>
+                        <dt className="text-xs text-muted-foreground">{row.label}</dt>
+                        <dd
+                          dir={row.ltr ? "ltr" : undefined}
+                          className="text-sm font-medium"
+                        >
+                          {row.value}
+                        </dd>
                       </div>
-                    );
-                  })}
+                    ))}
+                  </dl>
+                </div>
+
+                <div className="glass-panel overflow-hidden">
+                  <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
+                    التواصل مع الفندق
+                  </h2>
+                  <div className="flex flex-col">
+                    {contactRows.map((row, i) => {
+                      const Icon = row.icon;
+                      return (
+                        <div
+                          key={i}
+                          className="flex items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 last:border-0"
+                        >
+                          <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                          {row.value ? (
+                            <a
+                              href={`${row.scheme}:${row.value}`}
+                              dir="ltr"
+                              className="min-w-0 flex-1 truncate text-start text-sm underline-offset-4 hover:underline"
+                            >
+                              {row.value}
+                            </a>
+                          ) : (
+                            <span className="min-w-0 flex-1 text-sm text-muted-foreground">
+                              غير متوفر
+                            </span>
+                          )}
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {row.tag}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {cost && !isQuick && (
-            <div className="glass-panel overflow-hidden">
-              <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
-                تفاصيل التكلفة
-              </h2>
-              <div className="px-5 py-2">
-                <CostBreakdownTable
-                  cost={cost}
-                  currency={hotel?.child_policy?.currency ?? "EGP"}
-                />
+            {cost && !isQuick && (
+              <div className="glass-panel overflow-hidden">
+                <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
+                  تفاصيل التكلفة
+                </h2>
+                <div className="px-5 py-2">
+                  <CostBreakdownTable
+                    cost={cost}
+                    currency={hotel?.child_policy?.currency ?? "EGP"}
+                  />
+                </div>
               </div>
+            )}
+
+            {!isQuick && contentCard}
+
+            <BookingAttachments
+              bookingId={booking.id}
+              currentUserName={currentUser?.profile?.full_name ?? null}
+            />
+
+            <AuditLogTimeline bookingId={booking.id} />
+          </div>
+
+          {currentUser && (
+            <div className="lg:sticky lg:top-20">
+              <CommentThread
+                bookingId={booking.id}
+                currentUserId={currentUser.id}
+                initialComments={comments}
+              />
             </div>
           )}
-
-          {!isQuick && contentCard}
-
-          <BookingAttachments
-            bookingId={booking.id}
-            attachments={attachments}
-            currentUserName={currentUser?.profile?.full_name ?? null}
-          />
-
-          <AuditLogTimeline bookingId={booking.id} />
         </div>
-
-        {currentUser && (
-          <div className="lg:sticky lg:top-20">
-            <CommentThread
-              bookingId={booking.id}
-              currentUserId={currentUser.id}
-              initialComments={comments}
-            />
-          </div>
-        )}
-      </div>
+      </BookingFilesProvider>
     </div>
   );
 }

@@ -1,19 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { AttachmentUploader } from "./attachment-uploader";
-import { AttachmentsList, type AttachmentWithUploader } from "./attachments-list";
+import { AttachmentsList } from "./attachments-list";
+import { useBookingFiles } from "./booking-files-context";
 
 export function BookingAttachments({
   bookingId,
-  attachments,
   currentUserName,
 }: {
   bookingId: string;
-  attachments: AttachmentWithUploader[];
   currentUserName: string | null;
 }) {
-  const [items, setItems] = useState(attachments);
+  const { files, addFile } = useBookingFiles();
 
   return (
     <div className="glass-panel overflow-hidden">
@@ -22,13 +20,10 @@ export function BookingAttachments({
         <AttachmentUploader
           bookingId={bookingId}
           onUploaded={(attachment) =>
-            setItems((prev) => [
-              { ...attachment, uploader_name: currentUserName },
-              ...prev,
-            ])
+            addFile({ ...attachment, uploader_name: currentUserName })
           }
         />
-        <AttachmentsList attachments={items} />
+        <AttachmentsList attachments={files} />
       </div>
     </div>
   );

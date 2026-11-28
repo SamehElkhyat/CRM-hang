@@ -56,15 +56,11 @@ function AttachmentThumbnail({ filePath, fileType }: { filePath: string; fileTyp
   );
 }
 
-export function AttachmentsList({
-  attachments,
-}: {
-  attachments: AttachmentWithUploader[];
-}) {
+export function useOpenAttachment() {
   const [supabase] = useState(() => createClient());
   const [openingId, setOpeningId] = useState<string | null>(null);
 
-  async function handleOpen(attachment: AttachmentWithUploader) {
+  async function openAttachment(attachment: AttachmentWithUploader) {
     setOpeningId(attachment.id);
     try {
       const { data, error } = await supabase.storage
@@ -78,6 +74,16 @@ export function AttachmentsList({
       setOpeningId(null);
     }
   }
+
+  return { openingId, openAttachment };
+}
+
+export function AttachmentsList({
+  attachments,
+}: {
+  attachments: AttachmentWithUploader[];
+}) {
+  const { openingId, openAttachment } = useOpenAttachment();
 
   if (attachments.length === 0) {
     return (
@@ -93,7 +99,7 @@ export function AttachmentsList({
         <li key={attachment.id}>
           <button
             type="button"
-            onClick={() => handleOpen(attachment)}
+            onClick={() => openAttachment(attachment)}
             disabled={openingId === attachment.id}
             className="row-interactive flex w-full items-center gap-3 border-b border-[var(--hairline)] px-5 py-3 text-start last:border-0"
           >

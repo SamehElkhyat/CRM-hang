@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { Send } from "lucide-react";
+import { format, isToday, isYesterday } from "date-fns";
+import { ar } from "date-fns/locale";
+import { FileText, ImageIcon, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { markBookingRead, postComment } from "@/app/(dashboard)/bookings/actions";
+import { formatFileSize } from "@/lib/storage/booking-attachments";
+import { useOpenAttachment } from "./attachments-list";
+import { useBookingFiles } from "./booking-files-context";
 
 export interface CommentWithAuthor {
   id: string;
@@ -19,6 +23,12 @@ export interface CommentWithAuthor {
   is_system: boolean;
   created_at: string;
   author_name: string | null;
+}
+
+function dayLabel(date: Date) {
+  if (isToday(date)) return "اليوم";
+  if (isYesterday(date)) return "أمس";
+  return format(date, "d MMMM yyyy", { locale: ar });
 }
 
 export function CommentThread({
@@ -34,6 +44,14 @@ export function CommentThread({
   const [comments, setComments] = useState(initialComments);
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const { files } = useBookingFiles();
+  const { openingId, openAttachment } = useOpenAttachment();
+
+  // Messages and uploaded files in the order they happened.
+  const timeline = [
+    ...comments.map((comment) => ({ at: comment.created_at, comment, file: null })),
+    ...files.map((file) => ({ at: file.created_at, comment: null, file })),
+  ].sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
   const bottomRef = useRef<HTMLDivElement>(null);
   const authorNamesRef = useRef<Record<string, string>>(
     Object.fromEntries(
@@ -89,7 +107,7 @@ export function CommentThread({
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [comments.length]);
+  }, [timeline.length]);
 
   async function handleSend() {
     const text = message.trim();
@@ -116,7 +134,7 @@ export function CommentThread({
 
       <ScrollArea className="flex-1 px-5 py-4">
         <div className="flex flex-col gap-4">
-          {comments.length === 0 && (
+          {timeline.length === 0 && (
             <p className="py-12 text-sm leading-relaxed text-muted-foreground">
               لا توجد رسائل بعد.
               <br />
@@ -124,13 +142,49 @@ export function CommentThread({
             </p>
           )}
 
-          {comments.map((c) => {
-            if (c.is_system) {
-              return (
-                <div
-                  key={c.id}
-                  className="flex items-center gap-3 py-0.5 text-xs text-muted-foreground"
-                >
+          {timeline.map(({ at, comment: c, file }, index) => {
+            const date = new Date(at);
+            const startsDay =
+              index === 0 ||
+              new Date(timeline[index - 1].at).toDateString() !== date.toDateString();
+            let item: React.ReactNode;
+
+            if (file) {
+              const Icon = file.file_type.startsWith("image/") ? ImageIcon : FileText;
+              item = (
+                <div className="flex flex-col items-start gap-1">
+                  <span className="px-1 text-xs font-medium text-muted-foreground">
+                    {file.uploader_name ?? "عضو الفريق"} رفع ملف
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => openAttachment(file)}
+                    disabled={openingId === file.id}
+                    title={`فتح ${file.file_name}`}
+                    className="flex w-full max-w-[86%] items-center gap-3 rounded-lg border border-[var(--hairline-strong)] px-3 py-2 text-start transition-colors duration-150 ease-out hover:bg-accent/60 focus-visible:outline-2 focus-visible:outline-ring"
+                  >
+                    {openingId === file.id ? (
+                      <Loader2 className="size-5 shrink-0 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+                    )}
+                    <span className="min-w-0 flex-1">
+                      <span dir="auto" className="block truncate text-sm font-medium">
+                        {file.file_name}
+                      </span>
+                      <span className="block text-xs text-muted-foreground">
+                        {formatFileSize(file.file_size)} · اضغط للفتح
+                      </span>
+                    </span>
+                  </button>
+                  <span className="px-1 text-xs tabular-nums text-muted-foreground">
+                    {format(date, "HH:mm")}
+                  </span>
+                </div>
+              );
+            } else if (c.is_system) {
+              item = (
+                <div className="flex items-center gap-3 py-0.5 text-xs text-muted-foreground">
                   <span className="h-px flex-1 bg-[var(--hairline)]" />
                   <span className="whitespace-nowrap rounded-full border border-[var(--hairline)] bg-muted/50 px-2.5 py-0.5">
                     {c.message}
@@ -138,34 +192,39 @@ export function CommentThread({
                   <span className="h-px flex-1 bg-[var(--hairline)]" />
                 </div>
               );
+            } else {
+              const isMine = c.author_id === currentUserId;
+              item = (
+                <div className={cn("flex flex-col gap-1", isMine ? "items-end" : "items-start")}>
+                  <span className="px-1 text-xs font-medium text-muted-foreground">
+                    {isMine ? "أنت" : (c.author_name ?? "عضو الفريق")}
+                  </span>
+                  <div
+                    className={cn(
+                      "max-w-[86%] whitespace-pre-wrap px-3.5 py-2.5 text-sm leading-relaxed",
+                      isMine
+                        ? "rounded-[16px_16px_4px_16px] bg-primary text-primary-foreground"
+                        : "rounded-[16px_16px_16px_4px] border border-[var(--hairline)] bg-muted/60",
+                    )}
+                  >
+                    {c.message}
+                  </div>
+                  <span className="px-1 text-xs tabular-nums text-muted-foreground">
+                    {format(date, "HH:mm")}
+                  </span>
+                </div>
+              );
             }
 
-            const isMine = c.author_id === currentUserId;
             return (
-              <div
-                key={c.id}
-                className={cn(
-                  " flex flex-col gap-1",
-                  isMine ? "items-end" : "items-start",
+              <Fragment key={file ? `file-${file.id}` : `message-${c.id}`}>
+                {startsDay && (
+                  <p className="text-center text-xs font-medium text-muted-foreground">
+                    {dayLabel(date)}
+                  </p>
                 )}
-              >
-                <span className="px-1 text-xs font-medium text-muted-foreground">
-                  {isMine ? "أنت" : (c.author_name ?? "عضو الفريق")}
-                </span>
-                <div
-                  className={cn(
-                    "max-w-[86%] whitespace-pre-wrap px-3.5 py-2.5 text-sm leading-relaxed",
-                    isMine
-                      ? "rounded-[16px_16px_4px_16px] bg-primary text-primary-foreground"
-                      : "rounded-[16px_16px_16px_4px] border border-[var(--hairline)] bg-muted/60",
-                  )}
-                >
-                  {c.message}
-                </div>
-                <span className="px-1 text-xs tabular-nums text-muted-foreground">
-                  {format(new Date(c.created_at), "HH:mm")}
-                </span>
-              </div>
+                {item}
+              </Fragment>
             );
           })}
           <div ref={bottomRef} />
