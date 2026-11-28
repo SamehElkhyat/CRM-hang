@@ -106,7 +106,10 @@ export function CommentThread({
   }, [bookingId, supabase]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Scroll the chat's own viewport, not the page: scrollIntoView would also
+    // drag the whole booking screen down.
+    const viewport = bottomRef.current?.closest('[data-slot="scroll-area-viewport"]');
+    viewport?.scrollTo({ top: viewport.scrollHeight, behavior: "smooth" });
   }, [timeline.length]);
 
   async function handleSend() {
@@ -123,7 +126,7 @@ export function CommentThread({
   }
 
   return (
-    <div className="glass-panel flex h-[34rem] flex-col overflow-hidden">
+    <div className="glass-panel flex h-[max(36rem,75dvh)] flex-col overflow-hidden lg:h-[max(38rem,calc(100dvh-14rem))]">
       <div className="flex items-center justify-between border-b border-[var(--hairline)] px-5 py-3.5">
         <h2 className="text-sm font-semibold">المحادثة</h2>
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -132,7 +135,7 @@ export function CommentThread({
         </span>
       </div>
 
-      <ScrollArea className="flex-1 px-5 py-4">
+      <ScrollArea className="min-h-0 flex-1 px-5 py-4">
         <div className="flex flex-col gap-4">
           {timeline.length === 0 && (
             <p className="py-12 text-sm leading-relaxed text-muted-foreground">
@@ -236,7 +239,7 @@ export function CommentThread({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="اكتب رسالة..."
-          className="max-h-32 min-h-10 resize-none border-transparent bg-muted/50"
+          className="max-h-40 min-h-16 resize-none border-transparent bg-muted/50"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

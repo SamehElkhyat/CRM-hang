@@ -196,12 +196,12 @@ export default async function BookingDetailPage({
       </header>
 
       <BookingFilesProvider key={booking.id} bookingId={booking.id} initialFiles={attachments}>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
-          <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[minmax(0,1fr)_480px] min-[1440px]:grid-cols-[minmax(0,1fr)_560px]">
+          <div className="@container flex min-w-0 flex-col gap-6">
             {isQuick && contentCard}
 
             {!isQuick && (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 @xl:grid-cols-2">
                 <div className="glass-panel overflow-hidden">
                   <h2 className="border-b border-[var(--hairline)] px-5 py-3 text-sm font-semibold">
                     تفاصيل الحجز
